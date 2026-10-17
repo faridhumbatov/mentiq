@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="az">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Məntiq.ON - Qruplararası Yarış</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: '#6F61EF',
+                        brandDark: '#5849E0',
+                        brandLight: '#EEECFC',
+                        accentYellow: '#FCD53F',
+                        ink: '#1E2235',
+                        muted: '#7E849B',
+                        surface: '#F8F9FC'
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #FFFFFF;
+            color: #1E2235;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .material-symbols-rounded {
+            font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+            user-select: none;
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        #drawerBackdrop {
+            transition: opacity 0.28s ease, visibility 0.28s ease;
+        }
+
+        #sideDrawer {
+            transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex flex-col pb-24 max-w-md mx-auto relative bg-surface border-x border-slate-100">
+
+    <!-- ==================== 1. STABİL HEADER ==================== -->
+    <header class="px-5 pt-4 pb-2 flex items-center justify-between bg-white border-b border-slate-100">
+        <div class="flex items-center space-x-3">
+            <button onclick="toggleDrawer(true)"
+                class="w-10 h-10 rounded-2xl bg-surface border border-slate-200/80 hover:bg-slate-100 flex items-center justify-center text-ink active:scale-95 transition focus:outline-none">
+                <span class="material-symbols-rounded text-[22px]">menu</span>
+            </button>
+
+            <div>
+                <div class="flex items-center space-x-1.5">
+                    <span class="text-[11px] font-bold text-ink">Bürünc 1</span>
+                    <span class="text-[10px] font-semibold text-muted">· 62%</span>
+                </div>
+                <div class="w-24 h-2 bg-slate-100 rounded-full overflow-hidden mt-1 border border-slate-200/60">
+                    <div class="bg-brand h-full rounded-full" style="width: 62%"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex items-center space-x-2">
+            <a href="market.html"
+                class="flex items-center space-x-1 bg-amber-50/90 border border-amber-200/80 px-3 py-1.5 rounded-full active:scale-95 transition">
+                <span class="material-symbols-rounded text-amber-500 text-[16px]">bolt</span>
+                <span class="text-xs font-extrabold text-amber-900">323 XP</span>
+            </a>
+
+            <button onclick="openInboxModal()"
+                class="w-10 h-10 rounded-2xl bg-surface border border-slate-200/80 hover:bg-slate-100 flex items-center justify-center text-ink relative active:scale-95 transition">
+                <span class="material-symbols-rounded text-[20px]">notifications</span>
+                <span class="absolute top-2.5 right-2.5 w-2 h-2 bg-rose-500 rounded-full ring-2 ring-white"></span>
+            </button>
+        </div>
+    </header>
+
+
+    <!-- ==================== 2. ONLAYN STATUS ==================== -->
+    <section class="px-5 pt-3">
+        <div
+            class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-white border border-slate-200/80 shadow-2xs">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span class="text-xs font-extrabold text-ink">Hal-hazırda onlayn: 9 nəfər</span>
+        </div>
+    </section>
+
+
+    <!-- ==================== 3. QRUPLAR ARASI YARIŞ BÖLMƏSİ ==================== -->
+    <section class="px-5 pt-4 space-y-4">
+        <div class="space-y-1">
+            <h2 class="text-base font-black text-ink flex items-center space-x-2">
+                <span>🏁</span>
+                <span>Qruplar Arası Yarış</span>
+            </h2>
+            <p class="text-xs text-muted">Sıralama qrupun ortalama xalına görədir.</p>
+        </div>
+
+        <!-- Zaman Aralığı Tabları -->
+        <div
+            class="flex items-center space-x-1 overflow-x-auto no-scrollbar bg-white p-1 rounded-2xl border border-slate-200/80">
+            <button onclick="setTimeFilter('today')" id="timeToday"
+                class="px-3 py-1.5 rounded-xl bg-surface text-brand text-xs font-extrabold flex-shrink-0 transition">Bugün</button>
+            <button onclick="setTimeFilter('week')" id="timeWeek"
+                class="px-3 py-1.5 rounded-xl text-muted text-xs font-extrabold flex-shrink-0 transition">Bu
+                həftə</button>
+            <button onclick="setTimeFilter('month')" id="timeMonth"
+                class="px-3 py-1.5 rounded-xl text-muted text-xs font-extrabold flex-shrink-0 transition">Bu ay</button>
+            <button onclick="setTimeFilter('year')" id="timeYear"
+                class="px-3 py-1.5 rounded-xl text-muted text-xs font-extrabold flex-shrink-0 transition">Bu il</button>
+            <button onclick="setTimeFilter('all')" id="timeAll"
+                class="px-3 py-1.5 rounded-xl text-muted text-xs font-extrabold flex-shrink-0 transition">Bütün
+                zamanlar</button>
+        </div>
+
+        <!-- Günlük Sıralamanın Sıfırlanma Kartı -->
+        <div class="p-5 rounded-[28px] bg-white border border-slate-200/90 shadow-sm shadow-slate-100 space-y-3">
+            <div class="flex items-center space-x-2 text-brand">
+                <span class="material-symbols-rounded text-[18px]">trophy</span>
+                <h3 class="text-xs font-extrabold text-ink">Günlük sıralamanın sıfırlanmasına qalır:</h3>
+            </div>
+
+            <div class="grid grid-cols-3 gap-2 text-center">
+                <div class="p-2.5 rounded-2xl bg-surface border border-slate-200/70">
+                    <span class="text-lg font-black text-brand">23</span>
+                    <span class="text-[10px] font-bold text-muted block">saat</span>
+                </div>
+                <div class="p-2.5 rounded-2xl bg-surface border border-slate-200/70">
+                    <span class="text-lg font-black text-brand">18</span>
+                    <span class="text-[10px] font-bold text-muted block">dəq</span>
+                </div>
+                <div class="p-2.5 rounded-2xl bg-surface border border-slate-200/70">
+                    <span class="text-lg font-black text-brand">05</span>
+                    <span class="text-[10px] font-bold text-muted block">san</span>
+                </div>
+            </div>
+
+            <p class="text-[10px] text-muted text-center leading-relaxed">
+                Bitir: 2026-10-18 23:59:59 (Bakı vaxtı) - bitəndə ilk 3-lük qeydə alınır.
+            </p>
+        </div>
+
+        <!-- QRUPLAR CƏDVƏLİ VƏ DROPDOWN MENYULAR -->
+        <div class="bg-white rounded-[28px] border border-slate-200/90 shadow-sm shadow-slate-100 overflow-hidden">
+
+            <!-- Cədvəl Başlığı -->
+            <div
+                class="grid grid-cols-12 px-4 py-3 bg-surface border-b border-slate-100 text-[11px] font-extrabold text-muted">
+                <div class="col-span-5">Qrup</div>
+                <div class="col-span-2 text-center">Tələbə</div>
+                <div class="col-span-2 text-center">Kubok</div>
+                <div class="col-span-3 text-right">Ort. Xal</div>
+            </div>
+
+            <!-- Qrup 1 (Qrup 2 Axşam) -->
+            <div class="border-b border-slate-100/80">
+                <button onclick="toggleGroup('group1')"
+                    class="w-full grid grid-cols-12 px-4 py-3.5 items-center text-xs font-bold text-left hover:bg-slate-50 transition">
+                    <div class="col-span-5 flex items-center space-x-2">
+                        <span class="text-amber-600 font-black">🥇</span>
+                        <span class="text-ink truncate">Qrup 2 Axşam</span>
+                        <span id="icon-group1"
+                            class="material-symbols-rounded text-muted text-[16px] transition-transform">expand_more</span>
+                    </div>
+                    <div class="col-span-2 text-center text-muted font-semibold">14</div>
+                    <div class="col-span-2 text-center text-muted font-semibold">🏆 0</div>
+                    <div class="col-span-3 text-right font-black text-brand">12</div>
+                </button>
+                <!-- Dropdown Detal (Üzvlər) -->
+                <div id="group1"
+                    class="hidden px-4 pb-3 pt-1 space-y-1.5 bg-surface text-xs font-medium border-t border-slate-100">
+                    <div class="flex items-center justify-between text-muted py-1 border-b border-slate-200/50"><span>1.
+                            Fərid Hümbətov</span><span class="font-bold text-brand">165 xal</span></div>
+                    <div class="flex items-center justify-between text-muted py-1"><span>2. Cavid Qənizadə</span><span
+                            class="font-bold text-ink">140 xal</span></div>
+                </div>
+            </div>
+
+            <!-- Qrup 2 (Qrup 17 Səhər) -->
+            <div class="border-b border-slate-100/80">
+                <button onclick="toggleGroup('group2')"
+                    class="w-full grid grid-cols-12 px-4 py-3.5 items-center text-xs font-bold text-left hover:bg-slate-50 transition">
+                    <div class="col-span-5 flex items-center space-x-2">
+                        <span class="text-slate-400 font-black">🥈</span>
+                        <span class="text-ink truncate">Qrup 17 Səhər</span>
+                        <span id="icon-group2"
+                            class="material-symbols-rounded text-muted text-[16px] transition-transform">expand_more</span>
+                    </div>
+                    <div class="col-span-2 text-center text-muted font-semibold">15</div>
+                    <div class="col-span-2 text-center text-muted font-semibold">🏆 0</div>
+                    <div class="col-span-3 text-right font-black text-brand">9</div>
+                </button>
+                <div id="group2"
+                    class="hidden px-4 pb-3 pt-1 space-y-1.5 bg-surface text-xs font-medium border-t border-slate-100">
+                    <div class="flex items-center justify-between text-muted py-1 border-b border-slate-200/50"><span>1.
+                            Lamiya Quliyeva</span><span class="font-bold text-brand">165 xal</span></div>
+                    <div class="flex items-center justify-between text-muted py-1"><span>2. Yusif İmranlı</span><span
+                            class="font-bold text-ink">95 xal</span></div>
+                </div>
+            </div>
+
+            <!-- Qrup 3 (Liderlər) -->
+            <div class="border-b border-slate-100/80">
+                <button onclick="toggleGroup('group3')"
+                    class="w-full grid grid-cols-12 px-4 py-3.5 items-center text-xs font-bold text-left hover:bg-slate-50 transition">
+                    <div class="col-span-5 flex items-center space-x-2">
+                        <span class="text-amber-700 font-black">🥉</span>
+                        <span class="text-ink truncate">Liderlər</span>
+                        <span id="icon-group3"
+                            class="material-symbols-rounded text-muted text-[16px] transition-transform">expand_more</span>
+                    </div>
+                    <div class="col-span-2 text-center text-muted font-semibold">7</div>
+                    <div class="col-span-2 text-center text-muted font-semibold">🏆 0</div>
+                    <div class="col-span-3 text-right font-black text-muted">0</div>
+                </button>
+                <div id="group3"
+                    class="hidden px-4 pb-3 pt-1 space-y-1.5 bg-surface text-xs font-medium border-t border-slate-100">
+                    <div class="flex items-center justify-between text-muted py-1"><span>Üzv siyahısı hələ boşdur</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Qrup 4 (Nova) -->
+            <div class="border-b border-slate-100/80">
+                <button onclick="toggleGroup('group4')"
+                    class="w-full grid grid-cols-12 px-4 py-3.5 items-center text-xs font-bold text-left hover:bg-slate-50 transition">
+                    <div class="col-span-5 flex items-center space-x-2">
+                        <span class="text-muted font-extrabold pl-1">4</span>
+                        <span class="text-ink truncate">Nova</span>
+                        <span id="icon-group4"
+                            class="material-symbols-rounded text-muted text-[16px] transition-transform">expand_more</span>
+                    </div>
+                    <div class="col-span-2 text-center text-muted font-semibold">19</div>
+                    <div class="col-span-2 text-center text-muted font-semibold">🏆 0</div>
+                    <div class="col-span-3 text-right font-black text-muted">0</div>
+                </button>
+                <div id="group4"
+                    class="hidden px-4 pb-3 pt-1 space-y-1.5 bg-surface text-xs font-medium border-t border-slate-100">
+                    <div class="flex items-center justify-between text-muted py-1"><span>Üzv siyahısı hələ boşdur</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Qrup 5 (Qrup 1 Axşam) -->
+            <div>
+                <button onclick="toggleGroup('group5')"
+                    class="w-full grid grid-cols-12 px-4 py-3.5 items-center text-xs font-bold text-left hover:bg-slate-50 transition">
+                    <div class="col-span-5 flex items-center space-x-2">
+                        <span class="text-muted font-extrabold pl-1">5</span>
+                        <span class="text-ink truncate">Qrup 1 Axşam</span>
+                        <span id="icon-group5"
+                            class="material-symbols-rounded text-muted text-[16px] transition-transform">expand_more</span>
+                    </div>
+                    <div class="col-span-2 text-center text-muted font-semibold">12</div>
+                    <div class="col-span-2 text-center text-muted font-semibold">🏆 0</div>
+                    <div class="col-span-3 text-right font-black text-muted">0</div>
+                </button>
+                <div id="group5"
+                    class="hidden px-4 pb-3 pt-1 space-y-1.5 bg-surface text-xs font-medium border-t border-slate-100">
+                    <div class="flex items-center justify-between text-muted py-1"><span>Üzv siyahısı hələ boşdur</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ==================== YAN MENYU (DRAWER) ==================== -->
+    <div id="drawerBackdrop" onclick="toggleDrawer(false)"
+        class="fixed inset-0 bg-slate-900/35 backdrop-blur-[2px] z-40 opacity-0 invisible">
+    </div>
+
+    <aside id="sideDrawer"
+        class="fixed top-0 bottom-0 left-0 w-72 bg-white z-50 border-r border-slate-200 shadow-2xl p-5 flex flex-col justify-between -translate-x-full rounded-r-3xl">
+
+        <div class="space-y-3">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                <a href="profil.html" class="flex items-center space-x-2.5">
+                    <div
+                        class="w-9 h-9 rounded-full bg-brandLight border border-indigo-200 text-brand flex items-center justify-center font-extrabold text-xs">
+                        FH
+                    </div>
+                    <div>
+                        <span class="text-sm font-extrabold text-ink block leading-none">Fərid Hümbətov</span>
+                        <span class="text-[11px] font-medium text-muted">Profilə keç →</span>
+                    </div>
+                </a>
+                <button onclick="toggleDrawer(false)"
+                    class="w-7 h-7 rounded-full bg-surface border border-slate-200/80 flex items-center justify-center text-muted hover:text-ink transition">
+                    <span class="material-symbols-rounded text-[16px]">close</span>
+                </button>
+            </div>
+
+            <nav class="space-y-0.5 text-xs font-bold text-ink">
+                <a href="panel.html"
+                    class="flex items-center space-x-2.5 px-3 py-2 rounded-xl hover:bg-surface transition">
+                    <span class="material-symbols-rounded text-[18px] text-muted">dashboard</span><span>Əsas
+                        Panel</span>
+                </a>
+                <a href="sinaqlar.html"
+                    class="flex items-center space-x-2.5 px-3 py-2 rounded-xl hover:bg-surface transition">
+                    <span class="material-symbols-rounded text-[18px] text-muted">quiz</span><span>Sınaqlar
+                        Siyahısı</span>
+                </a>
+                <a href="cempionlar.html"
+                    class="flex items-center space-x-2.5 px-3 py-2 rounded-xl hover:bg-surface transition">
+                    <span class="material-symbols-rounded text-[18px] text-muted">swords</span><span>Çempionlar
+                        Liqası</span>
+                </a>
+                <a href="tedbirler.html"
+                    class="flex items-center space-x-2.5 px-3 py-2 rounded-xl hover:bg-surface transition">
+                    <span class="material-symbols-rounded text-[18px] text-muted">event</span><span>Tədbirlər</span>
+                </a>
+                <a href="reytinq.html"
+                    class="flex items-center space-x-2.5 px-3 py-2 rounded-xl hover:bg-surface transition">
+                    <span class="material-symbols-rounded text-[18px] text-muted">leaderboard</span><span>Reytinq və
+                        Liqalar</span>
+                </a>
+                <a href="qruplar.html"
+                    class="flex items-center space-x-2.5 px-3 py-2 rounded-xl bg-brandLight text-brand">
+                    <span class="material-symbols-rounded text-[18px]">groups</span><span>Qruplar</span>
+                </a>
+                <a href="statistika.html"
+                    class="flex items-center space-x-2.5 px-3 py-2 rounded-xl hover:bg-surface transition">
+                    <span
+                        class="material-symbols-rounded text-[18px] text-muted">query_stats</span><span>Statistikam</span>
+                </a>
+                <a href="market.html"
+                    class="flex items-center space-x-2.5 px-3 py-2 rounded-xl hover:bg-surface transition">
+                    <span class="material-symbols-rounded text-[18px] text-muted">storefront</span><span>IQ
+                        Market</span>
+                </a>
+                <a href="movzu.html"
+                    class="flex items-center space-x-2.5 px-3 py-2 rounded-xl hover:bg-surface transition">
+                    <span class="material-symbols-rounded text-[18px] text-muted">menu_book</span><span>Mövzu
+                        İzahı</span>
+                </a>
+                <a href="mesajlar.html"
+                    class="flex items-center space-x-2.5 px-3 py-2 rounded-xl hover:bg-surface transition">
+                    <span class="material-symbols-rounded text-[18px] text-muted">chat</span><span>Mesajlar</span>
+                </a>
+                <a href="elanlar.html"
+                    class="flex items-center space-x-2.5 px-3 py-2 rounded-xl hover:bg-surface transition">
+                    <span class="material-symbols-rounded text-[18px] text-muted">campaign</span><span>Elanlar</span>
+                </a>
+                <a href="ideyalar.html"
+                    class="flex items-center space-x-2.5 px-3 py-2 rounded-xl hover:bg-surface transition">
+                    <span
+                        class="material-symbols-rounded text-[18px] text-muted">tips_and_updates</span><span>İdeyalar</span>
+                </a>
+            </nav>
+        </div>
+
+        <div class="pt-2 border-t border-slate-100 text-xs font-bold">
+            <a href="auth.html"
+                class="flex items-center justify-center space-x-1 w-full py-2 rounded-xl text-rose-500 hover:bg-rose-50 transition">
+                <span class="material-symbols-rounded text-[16px]">logout</span>
+                <span>Hesabdan Çıxış</span>
+            </a>
+        </div>
+    </aside>
+
+
+    <!-- ==================== MODAL (BİLDİRİŞLƏR) ==================== -->
+    <div id="inboxModal" onclick="closeInboxModal()"
+        class="fixed inset-0 bg-slate-900/35 backdrop-blur-[2px] z-50 hidden flex items-center justify-center p-5">
+        <div onclick="event.stopPropagation()"
+            class="bg-white rounded-3xl border border-slate-200 max-w-xs w-full p-5 space-y-3 shadow-xl">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-2.5">
+                <h3 class="text-sm font-extrabold text-ink">Bildirişlər</h3>
+                <button onclick="closeInboxModal()"
+                    class="w-7 h-7 rounded-full bg-surface text-xs font-bold text-muted">✕</button>
+            </div>
+            <div class="space-y-2 text-xs">
+                <div class="p-3 rounded-2xl bg-amber-50/80 border border-amber-200/60 text-ink">
+                    <span class="font-extrabold block">⚡ Qruplar Yarışı Yeniləndi!</span>
+                    <span class="text-muted">Qrup 2 Axşam hazırda 1-ci yerdədir.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ==================== JAVASCRIPT ==================== -->
+    <script>
+        function toggleDrawer(open) {
+            const drawer = document.getElementById('sideDrawer');
+            const backdrop = document.getElementById('drawerBackdrop');
+            if (open) {
+                drawer.classList.remove('-translate-x-full');
+                backdrop.classList.remove('opacity-0', 'invisible');
+                backdrop.classList.add('opacity-100', 'visible');
+                document.body.style.overflow = 'hidden';
+            } else {
+                drawer.classList.add('-translate-x-full');
+                backdrop.classList.remove('opacity-100', 'visible');
+                backdrop.classList.add('opacity-0', 'invisible');
+                document.body.style.overflow = '';
+            }
+        }
+
+        function openInboxModal() { document.getElementById('inboxModal').classList.remove('hidden'); }
+        function closeInboxModal() { document.getElementById('inboxModal').classList.add('hidden'); }
+
+        function setTimeFilter(filterId) {
+            ['today', 'week', 'month', 'year', 'all'].forEach(id => {
+                const btn = document.getElementById('time' + id.charAt(0).toUpperCase() + id.slice(1));
+                if (id === filterId) {
+                    btn.className = "px-3 py-1.5 rounded-xl bg-surface text-brand text-xs font-extrabold flex-shrink-0 transition";
+                } else {
+                    btn.className = "px-3 py-1.5 rounded-xl text-muted text-xs font-extrabold flex-shrink-0 transition";
+                }
+            });
+        }
+
+        function toggleGroup(groupId) {
+            const el = document.getElementById(groupId);
+            const icon = document.getElementById('icon-' + groupId);
+            if (el.classList.contains('hidden')) {
+                el.classList.remove('hidden');
+                icon.classList.add('rotate-180');
+            } else {
+                el.classList.add('hidden');
+                icon.classList.remove('rotate-180');
+            }
+        }
+    </script>
+
+</body>
+
+</html>
