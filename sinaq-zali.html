@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="az">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Məntiq.ON - Sınaq Zalı</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: '#6F61EF',
+                        brandDark: '#5849E0',
+                        brandLight: '#EEECFC',
+                        accentYellow: '#FCD53F',
+                        ink: '#1E2235',
+                        muted: '#7E849B',
+                        surface: '#F8F9FC'
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #FFFFFF;
+            color: #1E2235;
+            -webkit-tap-highlight-color: transparent;
+            overflow: hidden;
+        }
+
+        .material-symbols-rounded {
+            font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+            user-select: none;
+        }
+
+        /* Vertikal Snap Scroll */
+        .vertical-snap-container {
+            height: 100dvh;
+            overflow-y: auto;
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+            scrollbar-width: none;
+        }
+
+        .vertical-snap-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .question-slide {
+            height: 100dvh;
+            scroll-snap-align: center;
+            scroll-snap-stop: always;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 0 1.25rem 3.5rem 1.25rem;
+            box-sizing: border-box;
+            background-color: #FFFFFF;
+        }
+
+        .dots-scroll-container {
+            display: flex;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            scrollbar-width: none;
+        }
+
+        .dots-scroll-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        @keyframes strongScrollHint {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            30% {
+                transform: translateY(25px);
+            }
+
+            60% {
+                transform: translateY(-15px);
+            }
+        }
+
+        .animate-strong-hint {
+            animation: strongScrollHint 1.2s ease-in-out 1;
+        }
+    </style>
+</head>
+
+<body class="max-w-md mx-auto relative select-none">
+
+    <!-- ==================== ÜST HEADER ==================== -->
+    <header
+        class="absolute top-0 left-0 right-0 z-30 px-5 pt-3 pb-2 flex items-center justify-between bg-white border-b border-slate-100 shadow-2xs">
+        <a href="panel.html"
+            class="w-9 h-9 rounded-full bg-surface border border-slate-200 flex items-center justify-center text-ink active:scale-95 transition">
+            <span class="material-symbols-rounded text-[18px]">arrow_back</span>
+        </a>
+
+        <div class="flex items-center space-x-2">
+            <span id="headerCounter" class="text-xs font-extrabold bg-brandLight text-brand px-3 py-1 rounded-full">1 /
+                10</span>
+        </div>
+
+        <button onclick="openFinishModal()"
+            class="px-3 py-1 rounded-full bg-rose-500 hover:bg-rose-600 text-white font-extrabold text-xs shadow-sm active:scale-95 transition">
+            Bitir
+        </button>
+    </header>
+
+
+    <!-- ==================== ÜST İNDİKATORLAR ==================== -->
+    <div
+        class="absolute top-[55px] left-0 right-0 z-30 px-3 flex items-center justify-center bg-white pb-2 border-b border-slate-100">
+        <div class="dots-scroll-container space-x-1.5 px-2 py-0.5 max-w-[310px] justify-start" id="progressDots">
+            <!-- JS vasitəsilə dinamik render olunur -->
+        </div>
+    </div>
+
+
+    <!-- ==================== QALAN VAXT (TAM ORTADA) ==================== -->
+    <div class="absolute top-[100px] left-0 right-0 z-30 flex items-center justify-center pointer-events-none">
+        <div
+            class="flex items-center space-x-1.5 bg-surface border border-slate-200 px-3.5 py-1 rounded-full text-xs font-extrabold text-amber-700 shadow-2xs pointer-events-auto">
+            <span class="material-symbols-rounded text-[15px] text-amber-600">schedule</span>
+            <strong id="timerDisplay" class="font-mono text-xs">15:00</strong>
+        </div>
+    </div>
+
+
+    <!-- ==================== VERTİKAL SUALLAR KONTEYNERİ ==================== -->
+    <div id="questionsContainer" class="vertical-snap-container no-scrollbar">
+        <!-- Sual slaydları bura yerləşdirilir -->
+    </div>
+
+
+    <!-- ==================== BİTİR TƏSDİQ MODALI ==================== -->
+    <div id="finishModal"
+        class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-5">
+        <div onclick="event.stopPropagation()"
+            class="bg-white rounded-[32px] text-ink max-w-xs w-full p-6 text-center space-y-4 shadow-2xl">
+            <div class="w-14 h-14 rounded-2xl bg-brandLight text-brand flex items-center justify-center mx-auto">
+                <span class="material-symbols-rounded text-[30px]">task_alt</span>
+            </div>
+            <div class="space-y-1">
+                <h3 class="text-base font-extrabold text-ink">Sınağı bitirmək istəyirsiniz?</h3>
+                <p class="text-xs text-muted" id="modalStatsText">Cavablandırılan: 0 / 10</p>
+            </div>
+
+            <div class="space-y-2 pt-2">
+                <button onclick="confirmFinish()"
+                    class="w-full py-3 rounded-2xl bg-brand text-white font-extrabold text-xs shadow-md active:scale-95 transition">
+                    Bəli, Sınağı Bitir
+                </button>
+                <button onclick="closeFinishModal()"
+                    class="w-full py-2.5 rounded-2xl bg-surface border border-slate-200 text-xs font-bold text-muted hover:text-ink">
+                    Davam Et
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ==================== NƏTİCƏ MODALI ==================== -->
+    <div id="resultModal"
+        class="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-5">
+        <div class="bg-white rounded-[32px] text-ink max-w-sm w-full p-6 text-center space-y-4 shadow-2xl">
+            <div
+                class="w-16 h-16 rounded-3xl bg-amber-100 text-amber-600 flex items-center justify-center mx-auto text-3xl">
+                🎉
+            </div>
+            <div class="space-y-1">
+                <h3 class="text-lg font-black text-ink">Sınaq Tamamlandı!</h3>
+                <p class="text-xs text-muted">Ümumi topladığınız xal: <strong id="finalScoreText" class="text-brand">0
+                        XP</strong></p>
+            </div>
+
+            <div class="space-y-2 pt-2 text-xs font-bold">
+                <button onclick="restartQuiz()"
+                    class="w-full py-3 rounded-2xl bg-surface border border-slate-200 hover:border-brand flex items-center justify-center space-x-2">
+                    <span class="material-symbols-rounded text-[18px]">restart_alt</span>
+                    <span>Yenidən Həll Et</span>
+                </button>
+                <button onclick="openAnswersReview()"
+                    class="w-full py-3 rounded-2xl bg-surface border border-slate-200 hover:border-brand flex items-center justify-center space-x-2">
+                    <span class="material-symbols-rounded text-[18px]">visibility</span>
+                    <span>Cavablara Bax</span>
+                </button>
+                <button onclick="goBackHome()"
+                    class="w-full py-3 rounded-2xl bg-brand text-white shadow-md flex items-center justify-center space-x-2">
+                    <span class="material-symbols-rounded text-[18px]">home</span>
+                    <span id="homeBtnText">Ana Səhifəyə Qayıt</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ==================== JAVASCRIPT MƏNTİQİ ==================== -->
+    <script>
+        const questions = [
+            { id: 1, text: "2, 4, 6, 8, ?", points: 10, options: ["A) 10", "B) 12", "C) 14", "D) 16"], answer: 0 },
+            { id: 2, text: "Harda yaşayırıq? Planetimizin adını seçin:", points: 10, options: ["A) Mars", "B) Yer", "C) Venera", "D) Yupiter"], answer: 1 },
+            { id: 3, text: "5 * 5 ifadəsinin nəticəsi neçədir? Uzun cavab variantlarının dizaynını yoxlamaq üçün test mətni.", points: 15, options: ["A) 20 - Uzun cavab variantı nümunəsi olaraq sətirlərə səliqəli bölünməsi təmin edilmişdir.", "B) 30", "C) 25", "D) 35"], answer: 2 },
+            { id: 4, text: "Aşağıdakılardan hansı tək ədəd deyil?", points: 10, options: ["A) 3", "B) 7", "C) 11", "D) 12"], answer: 3 },
+            { id: 5, text: "1 həftə neçə gündən ibarətdir?", points: 10, options: ["A) 5 gün", "B) 6 gün", "C) 7 gün", "D) 10 gün"], answer: 2 },
+            { id: 6, text: "3, 6, 9, 12, ?", points: 15, options: ["A) 14", "B) 15", "C) 18", "D) 21"], answer: 1 },
+            { id: 7, text: "Kvadratın neçə tərəfi var?", points: 10, options: ["A) 3", "B) 4", "C) 5", "D) 6"], answer: 1 },
+            { id: 8, text: "100-ün yarısı neçədir?", points: 10, options: ["A) 25", "B) 40", "C) 50", "D) 75"], answer: 2 },
+            { id: 9, text: "Hərf sırasına görə 'A'-dan sonra gələn hərf hansıdır?", points: 10, options: ["A) B", "B) C", "C) D", "D) E"], answer: 0 },
+            { id: 10, text: "Günəş hansı tərəfdən çıxır?", points: 15, options: ["A) Qərb", "B) Şimal", "C) Cənub", "D) Şərq"], answer: 3 }
+        ];
+
+        let currentIndex = 0;
+        const userAnswers = {};
+        let afkTimer = null;
+        let quizSeconds = 900;
+        let firstAnswerGiven = false;
+
+        const container = document.getElementById('questionsContainer');
+        const dotsContainer = document.getElementById('progressDots');
+        const referrer = document.referrer;
+        const isFromSinaqlar = referrer.includes('sinaqlar.html');
+
+        function initQuiz() {
+            container.innerHTML = '';
+            questions.forEach((q, index) => {
+                const slide = document.createElement('div');
+                slide.className = 'question-slide';
+                slide.setAttribute('data-index', index);
+
+                let optionsHTML = '';
+                q.options.forEach((opt, optIdx) => {
+                    const isSelected = userAnswers[index] === optIdx;
+                    const isLong = opt.length > 30;
+
+                    optionsHTML += `
+                        <button onclick="selectOption(${index}, ${optIdx})" 
+                                id="q_${index}_opt_${optIdx}"
+                                class="w-full text-left ${isLong ? 'p-3.5 rounded-2xl text-sm sm:text-base' : 'p-3.5 rounded-full text-sm sm:text-base'} bg-surface hover:bg-slate-100 border border-slate-300 text-ink font-bold flex items-center justify-between transition active:scale-[0.99] ${isSelected ? 'bg-accentYellow text-ink border-accentYellow shadow-sm font-black' : ''}">
+                          <span class="leading-snug">${opt}</span>
+                          <span id="q_${index}_check_${optIdx}" class="w-5 h-5 rounded-full border border-slate-400 flex-shrink-0 flex items-center justify-center text-[10px] ml-2 ${isSelected ? 'bg-ink text-accentYellow border-ink' : ''}">${isSelected ? '✓' : ''}</span>
+                        </button>
+                    `;
+                });
+
+                slide.innerHTML = `
+                    <!-- Sualın nömrəsi və Səhvi bildir -->
+                    <div class="flex items-center justify-between pt-1 pb-3">
+                        <span class="text-sm font-black bg-brandLight text-brand px-3.5 py-1.5 rounded-full">Sual ${index + 1}</span>
+                        <button onclick="reportQuestion(${q.id})" class="text-xs sm:text-sm font-bold text-muted hover:text-rose-500 bg-surface border border-slate-200 px-4 py-1.5 rounded-full transition flex items-center space-x-1 shadow-2xs">
+                            <span class="material-symbols-rounded text-[16px]">flag</span>
+                            <span>Səhvi bildir</span>
+                        </button>
+                    </div>
+
+                    <!-- Sual mətni -->
+                    <div class="py-2 mb-4">
+                        <h2 class="text-xl sm:text-2xl font-extrabold text-ink leading-relaxed tracking-tight">
+                            ${q.text}
+                        </h2>
+                    </div>
+
+                    <!-- Cavab variantları -->
+                    <div class="space-y-3 mb-6">
+                        ${optionsHTML}
+                    </div>
+
+                    <!-- Naviqasiya düymələri -->
+                    <div class="flex items-center justify-between pt-2">
+                        <button onclick="prevQuestion()" class="px-5 py-2.5 rounded-full bg-surface border border-slate-300 hover:bg-slate-100 text-ink font-extrabold text-xs sm:text-sm active:scale-95 transition inline-flex items-center space-x-1">
+                            <span class="material-symbols-rounded text-[18px]">chevron_left</span>
+                            <span>Əvvəlki</span>
+                        </button>
+
+                        <button onclick="nextQuestion()" class="px-6 py-2.5 rounded-full bg-accentYellow text-ink font-extrabold text-xs sm:text-sm active:scale-95 shadow-sm transition inline-flex items-center space-x-1">
+                            <span id="nextBtnText_${index}">${index === questions.length - 1 ? 'Sınağı bitir' : 'Növbəti'}</span>
+                            <span class="material-symbols-rounded text-[18px]">chevron_right</span>
+                        </button>
+                    </div>
+                `;
+                container.appendChild(slide);
+            });
+
+            renderSquircleDots();
+            resetAfkTimer();
+        }
+
+        function selectOption(qIdx, optIdx) {
+            userAnswers[qIdx] = optIdx;
+
+            // Səhifəni tam yeniləmədən yalnız seçilən sualın variantlarını rəngləndiririk
+            questions[qIdx].options.forEach((_, oIdx) => {
+                const btn = document.getElementById(`q_${qIdx}_opt_${oIdx}`);
+                const chk = document.getElementById(`q_${qIdx}_check_${oIdx}`);
+                if (btn && chk) {
+                    if (oIdx === optIdx) {
+                        btn.className = btn.className.replace('bg-surface hover:bg-slate-100 border-slate-300 text-ink font-bold', '') + ' bg-accentYellow text-ink border-accentYellow shadow-sm font-black';
+                        chk.className = 'w-5 h-5 rounded-full border border-ink flex-shrink-0 flex items-center justify-center text-[10px] ml-2 bg-ink text-accentYellow';
+                        chk.innerText = '✓';
+                    } else {
+                        btn.className = 'w-full text-left p-3.5 rounded-full bg-surface hover:bg-slate-100 border border-slate-300 text-ink font-bold flex items-center justify-between transition active:scale-[0.99]';
+                        chk.className = 'w-5 h-5 rounded-full border border-slate-400 flex-shrink-0 flex items-center justify-center text-[10px] ml-2';
+                        chk.innerText = '';
+                    }
+                }
+            });
+
+            renderSquircleDots();
+            resetAfkTimer();
+            if (!firstAnswerGiven) {
+                firstAnswerGiven = true;
+                setTimeout(triggerStrongHintAnimation, 400);
+            }
+        }
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const idx = parseInt(entry.target.getAttribute('data-index'));
+                    currentIndex = idx;
+                    document.getElementById('headerCounter').innerText = `${currentIndex + 1} / ${questions.length}`;
+                    renderSquircleDots();
+                    resetAfkTimer();
+                    scrollToDot(idx);
+                }
+            });
+        }, { threshold: 0.6 });
+
+        setTimeout(() => {
+            document.querySelectorAll('.question-slide').forEach(slide => observer.observe(slide));
+        }, 100);
+
+        function renderSquircleDots() {
+            dotsContainer.innerHTML = '';
+            for (let i = 0; i < questions.length; i++) {
+                let dotColor = 'bg-slate-100 text-muted border border-slate-200';
+                let dotText = (i + 1);
+
+                if (i === currentIndex) {
+                    dotColor = 'bg-accentYellow text-ink font-black ring-2 ring-brand scale-105';
+                } else if (userAnswers[i] !== undefined) {
+                    dotColor = 'bg-emerald-500 text-white font-bold';
+                }
+
+                const dot = document.createElement('div');
+                dot.id = `dot_${i}`;
+                dot.className = `w-9 h-9 rounded-2xl text-xs flex items-center justify-center transition-all duration-300 cursor-pointer flex-shrink-0 ${dotColor}`;
+                dot.innerText = dotText;
+                dot.onclick = () => scrollToSlide(i);
+                dotsContainer.appendChild(dot);
+            }
+        }
+
+        function scrollToDot(idx) {
+            const dotEl = document.getElementById(`dot_${idx}`);
+            if (dotEl) {
+                dotEl.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+            }
+        }
+
+        function scrollToSlide(idx) {
+            const targetSlide = document.querySelector(`.question-slide[data-index="${idx}"]`);
+            if (targetSlide) {
+                targetSlide.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        function nextQuestion() {
+            if (currentIndex < questions.length - 1) {
+                currentIndex++;
+                scrollToSlide(currentIndex);
+            } else {
+                openFinishModal();
+            }
+            resetAfkTimer();
+        }
+
+        function prevQuestion() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                scrollToSlide(currentIndex);
+            }
+            resetAfkTimer();
+        }
+
+        function reportQuestion(qId) {
+            alert(`Sual #${qId} ilə bağlı səhv bildirişiniz qeydə alındı.`);
+        }
+
+        function openFinishModal() {
+            const answeredCount = Object.keys(userAnswers).length;
+            document.getElementById('modalStatsText').innerText = `Cavablandırılan: ${answeredCount} / ${questions.length}`;
+            document.getElementById('finishModal').classList.remove('hidden');
+        }
+        function closeFinishModal() { document.getElementById('finishModal').classList.add('hidden'); }
+
+        function confirmFinish() {
+            closeFinishModal();
+            let totalEarned = 0;
+            Object.keys(userAnswers).forEach(qIdx => {
+                if (userAnswers[qIdx] === questions[qIdx].answer) {
+                    totalEarned += questions[qIdx].points;
+                }
+            });
+            document.getElementById('finalScoreText').innerText = `${totalEarned} XP`;
+
+            if (isFromSinaqlar) {
+                document.getElementById('homeBtnText').innerText = "Sınaqlar Səhifəsinə Qayıt";
+            } else {
+                document.getElementById('homeBtnText').innerText = "Ana Səhifəyə Qayıt";
+            }
+            document.getElementById('resultModal').classList.remove('hidden');
+        }
+
+        function restartQuiz() { location.reload(); }
+        function openAnswersReview() { alert('Cavablar paneli açılır...'); }
+
+        function goBackHome() {
+            if (isFromSinaqlar) {
+                window.location.href = 'sinaqlar.html';
+            } else {
+                window.location.href = 'panel.html';
+            }
+        }
+
+        setInterval(() => {
+            if (quizSeconds > 0) {
+                quizSeconds--;
+                const m = Math.floor(quizSeconds / 60).toString().padStart(2, '0');
+                const s = (quizSeconds % 60).toString().padStart(2, '0');
+                document.getElementById('timerDisplay').innerText = `${m}:${s}`;
+            }
+        }, 1000);
+
+        function triggerStrongHintAnimation() {
+            const activeSlide = document.querySelector(`.question-slide[data-index="${currentIndex}"]`);
+            if (activeSlide) {
+                activeSlide.classList.add('animate-strong-hint');
+                setTimeout(() => {
+                    activeSlide.classList.remove('animate-strong-hint');
+                }, 1200);
+            }
+        }
+
+        function resetAfkTimer() {
+            if (afkTimer) clearTimeout(afkTimer);
+            afkTimer = setTimeout(() => {
+                triggerStrongHintAnimation();
+            }, 5000);
+        }
+
+        window.onload = () => { initQuiz(); };
+    </script>
+
+</body>
+
+</html>

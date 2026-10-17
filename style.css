@@ -1,0 +1,105 @@
+/* ===================================================
+   MƏNTİQ.ON — UNIFIED DESIGN SYSTEM
+   =================================================== */
+
+:root {
+    /* Colors */
+    --ds-brand: #6F61EF;
+    --ds-brand-hover: #5B4DE0;
+    --ds-brand-light: #EEECFC;
+    --ds-accent-yellow: #FED430;
+    --ds-accent-yellow-hover: #E5BE2B;
+    --ds-bg: #F8F9FE;
+    --ds-surface: #FFFFFF;
+    --ds-text-dark: #191D31;
+    --ds-text-muted: #697089;
+    --ds-border: #E8EBF2;
+    --ds-green: #00B894;
+    --ds-red: #FF7675;
+
+    /* Shadows */
+    --ds-shadow-sm: 0 2px 8px rgba(25, 29, 49, 0.04);
+    --ds-shadow-card: 0 8px 24px rgba(111, 97, 239, 0.12);
+    --ds-shadow-btn: 0 4px 14px rgba(254, 212, 48, 0.35);
+}
+
+body {
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    background-color: var(--ds-bg);
+    color: var(--ds-text-dark);
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* ================= COMPONENT PRESETS ================= */
+
+/* 1. Sual Cavab Variantları (Pill Button) */
+.ds-option-btn {
+    width: 100%;
+    padding: 1rem 1.25rem;
+    border-radius: 9999px;
+    background-color: var(--ds-surface);
+    color: var(--ds-text-dark);
+    font-weight: 700;
+    font-size: 0.875rem;
+    display: flex;
+    align-items: center;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: var(--ds-shadow-sm);
+    border: 1px solid transparent;
+}
+
+.ds-option-btn:hover {
+    transform: translateY(-1px);
+}
+
+.ds-option-btn.selected {
+    background-color: var(--ds-accent-yellow) !important;
+    color: var(--ds-text-dark) !important;
+    box-shadow: var(--ds-shadow-btn);
+}
+
+/* 2. Primary Yellow Action Button ("Let's go!") */
+.ds-btn-yellow {
+    background-color: var(--ds-accent-yellow);
+    color: var(--ds-text-dark);
+    font-weight: 800;
+    font-size: 0.875rem;
+    padding: 0.875rem 1.75rem;
+    border-radius: 9999px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: var(--ds-shadow-btn);
+    transition: all 0.2s ease;
+}
+
+.ds-btn-yellow:active {
+    transform: scale(0.97);
+}
+
+/* 3. Rounded Card Canvas */
+.ds-card {
+    background-color: var(--ds-surface);
+    border-radius: 28px;
+    border: 1px solid var(--ds-border);
+    box-shadow: var(--ds-shadow-sm);
+}
+
+/* 4. Scroll Snap Container (Panel sınaq kartları üçün) */
+.ds-snap-slider {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+}
+
+.ds-snap-slider::-webkit-scrollbar {
+    display: none;
+}
+
+.ds-snap-item {
+    flex: 0 0 100%;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+}

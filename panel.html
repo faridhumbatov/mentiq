@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="az">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Məntiq.ON - Əsas Panel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: '#6F61EF',
+                        brandDark: '#5849E0',
+                        brandLight: '#F0EEFF',
+                        accentYellow: '#FCD53F',
+                        ink: '#1E2235',
+                        muted: '#7E849B',
+                        surface: '#F8F9FC'
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #FFFFFF;
+            color: #1E2235;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .material-symbols-rounded {
+            font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+            user-select: none;
+        }
+
+        /* Sınaqlar üçün Horizontal Snap Slider */
+        .quiz-snap-slider {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            scroll-padding-left: 20px;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+
+        .quiz-snap-slider::-webkit-scrollbar {
+            display: none;
+        }
+
+        .quiz-snap-item {
+            flex: 0 0 88%;
+            scroll-snap-align: start;
+            scroll-snap-stop: always;
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        #drawerBackdrop {
+            transition: opacity 0.28s ease, visibility 0.28s ease;
+        }
+
+        #sideDrawer {
+            transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex flex-col pb-12 max-w-md mx-auto relative bg-white border-x border-slate-100">
+
+    <!-- ==================== 1. HEADER ==================== -->
+    <header class="px-5 pt-4 pb-2 flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+            <button onclick="toggleDrawer(true)"
+                class="w-10 h-10 rounded-2xl bg-surface border border-slate-200/80 hover:bg-slate-100 flex items-center justify-center text-ink active:scale-95 transition focus:outline-none">
+                <span class="material-symbols-rounded text-[22px]">menu</span>
+            </button>
+
+            <div>
+                <div class="flex items-center space-x-1.5">
+                    <span class="text-[11px] font-bold text-ink">Bürünc 1</span>
+                    <span class="text-[10px] font-semibold text-muted">· 62%</span>
+                </div>
+                <div class="w-24 h-2 bg-slate-100 rounded-full overflow-hidden mt-1 border border-slate-200/60">
+                    <div class="bg-brand h-full rounded-full" style="width: 62%"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex items-center space-x-2">
+            <a href="market.html"
+                class="flex items-center space-x-1 bg-amber-50/90 border border-amber-200/80 px-3 py-1.5 rounded-full active:scale-95 transition">
+                <span class="material-symbols-rounded text-amber-500 text-[16px]">bolt</span>
+                <span class="text-xs font-extrabold text-amber-900">323 XP</span>
+            </a>
+
+            <button onclick="openInboxModal()"
+                class="w-10 h-10 rounded-2xl bg-surface border border-slate-200/80 hover:bg-slate-100 flex items-center justify-center text-ink relative active:scale-95 transition">
+                <span class="material-symbols-rounded text-[20px]">notifications</span>
+                <span class="absolute top-2.5 right-2.5 w-2 h-2 bg-rose-500 rounded-full ring-2 ring-white"></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- ==================== 2. SALAMLAMA BAŞLIĞI ==================== -->
+    <section class="px-5 pt-3 pb-1 flex items-center justify-between">
+        <div>
+            <span class="text-xs font-semibold text-muted block">Salam, Fərid</span>
+            <h1 class="text-[22px] font-extrabold text-ink tracking-tight mt-0.5">
+                Sınağa davam edək!
+            </h1>
+        </div>
+        <div class="flex items-center space-x-1 bg-orange-50 border border-orange-200/70 px-3 py-1.5 rounded-2xl">
+            <span class="material-symbols-rounded text-orange-500 text-[18px]">local_fire_department</span>
+            <span class="text-xs font-extrabold text-orange-700">5 gün</span>
+        </div>
+    </section>
+
+    <!-- ==================== 3. HORIZONTAL SNAP SINAQLAR ==================== -->
+    <section class="pt-3">
+        <div class="quiz-snap-slider gap-3.5 px-5 py-1">
+
+            <!-- SINAQ KARTI 1 -->
+            <div class="quiz-snap-item first:ml-0">
+                <div
+                    class="relative h-[182px] rounded-[28px] bg-gradient-to-br from-brand to-brandDark p-5 flex flex-col justify-between border border-indigo-400/30 shadow-md shadow-brand/10 overflow-hidden">
+                    <div class="absolute -right-6 -bottom-6 w-32 h-32 rounded-full bg-white/10 pointer-events-none">
+                    </div>
+                    <div
+                        class="absolute right-4 top-4 w-11 h-11 rounded-2xl bg-white/15 border border-white/20 flex items-center justify-center text-white pointer-events-none">
+                        <span class="material-symbols-rounded text-[24px]">psychology</span>
+                    </div>
+
+                    <div class="relative z-10 space-y-1">
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-white/75">Ümumi İmtahan</span>
+                        <h2 class="text-lg font-extrabold text-white tracking-tight">Qarışıq Sınaq #14</h2>
+                        <p class="text-xs font-medium text-white/80">50 sual · 90 dəqiqə</p>
+
+                        <div class="pt-2.5 flex items-center space-x-1.5 max-w-[145px]" title="Çətinlik: 3/5">
+                            <span class="h-1.5 flex-1 rounded-full bg-accentYellow"></span>
+                            <span class="h-1.5 flex-1 rounded-full bg-accentYellow"></span>
+                            <span class="h-1.5 flex-1 rounded-full bg-accentYellow"></span>
+                            <span class="h-1.5 flex-1 rounded-full bg-white/25"></span>
+                            <span class="h-1.5 flex-1 rounded-full bg-white/25"></span>
+                        </div>
+                    </div>
+
+                    <div class="relative z-10 flex items-center justify-between pt-2">
+                        <a href="sinaq-zali.html"
+                            class="px-5 py-2 rounded-full bg-accentYellow hover:bg-yellow-300 text-ink font-extrabold text-xs border border-amber-300 shadow-xs active:scale-95 transition inline-flex items-center space-x-1">
+                            <span>Başla</span>
+                            <span class="material-symbols-rounded text-[16px]">arrow_forward</span>
+                        </a>
+                        <span class="text-[11px] font-semibold text-white/80">Tamamlanma: 0%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SINAQ KARTI 2 -->
+            <div class="quiz-snap-item">
+                <div
+                    class="relative h-[182px] rounded-[28px] bg-accentYellow p-5 flex flex-col justify-between border border-amber-300/90 shadow-md shadow-amber-500/10 overflow-hidden">
+                    <div class="absolute -right-6 -bottom-6 w-32 h-32 rounded-full bg-white/30 pointer-events-none">
+                    </div>
+                    <div
+                        class="absolute right-4 top-4 w-11 h-11 rounded-2xl bg-ink/10 border border-ink/10 flex items-center justify-center text-ink pointer-events-none">
+                        <span class="material-symbols-rounded text-[24px]">function</span>
+                    </div>
+
+                    <div class="relative z-10 space-y-1">
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-ink/60">Mövzu Sınağı</span>
+                        <h2 class="text-lg font-extrabold text-ink tracking-tight">Qeyri-Aşkar Operator</h2>
+                        <p class="text-xs font-semibold text-ink/75">20 sual · 30 dəqiqə</p>
+
+                        <div class="pt-2.5 flex items-center space-x-1.5 max-w-[145px]" title="Çətinlik: 4/5">
+                            <span class="h-1.5 flex-1 rounded-full bg-ink"></span>
+                            <span class="h-1.5 flex-1 rounded-full bg-ink"></span>
+                            <span class="h-1.5 flex-1 rounded-full bg-ink"></span>
+                            <span class="h-1.5 flex-1 rounded-full bg-ink"></span>
+                            <span class="h-1.5 flex-1 rounded-full bg-ink/20"></span>
+                        </div>
+                    </div>
+
+                    <div class="relative z-10 flex items-center justify-between pt-2">
+                        <a href="sinaq-zali.html"
+                            class="px-5 py-2 rounded-full bg-ink text-white font-extrabold text-xs active:scale-95 transition inline-flex items-center space-x-1">
+                            <span>Başla</span>
+                            <span class="material-symbols-rounded text-[16px]">arrow_forward</span>
+                        </a>
+                        <span class="text-[11px] font-bold text-ink/70">Tamamlanma: 35%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KİLİDLİ SINAQ KARTI -->
+            <div class="quiz-snap-item">
+                <div onclick="openLockedModal()"
+                    class="cursor-pointer relative h-[182px] rounded-[28px] bg-slate-100 p-5 flex flex-col justify-between border border-slate-200/90 shadow-xs overflow-hidden active:scale-[0.99] transition">
+                    <div
+                        class="absolute right-4 top-4 w-11 h-11 rounded-2xl bg-slate-200/80 border border-slate-300/60 flex items-center justify-center text-slate-500">
+                        <span class="material-symbols-rounded text-[22px]">lock</span>
+                    </div>
+
+                    <div class="relative z-10 space-y-1">
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Kilidli Sınaq</span>
+                        <h2 class="text-lg font-extrabold text-slate-700 tracking-tight">Mətnin Məntiqi Təhlili</h2>
+                        <p class="text-xs font-medium text-slate-500">30 sual · 45 dəqiqə</p>
+
+                        <div class="pt-2.5 flex items-center space-x-1.5 max-w-[145px]" title="Çətinlik: 5/5">
+                            <span class="h-1.5 flex-1 rounded-full bg-slate-400"></span>
+                            <span class="h-1.5 flex-1 rounded-full bg-slate-400"></span>
+                            <span class="h-1.5 flex-1 rounded-full bg-slate-400"></span>
+                            <span class="h-1.5 flex-1 rounded-full bg-slate-400"></span>
+                            <span class="h-1.5 flex-1 rounded-full bg-slate-400"></span>
+                        </div>
+                    </div>
+
+                    <div class="relative z-10 flex items-center justify-between pt-2">
+                        <button type="button"
+                            class="px-4 py-2 rounded-full bg-slate-200/90 border border-slate-300 text-slate-600 font-extrabold text-xs inline-flex items-center space-x-1">
+                            <span class="material-symbols-rounded text-[15px]">lock</span>
+                            <span>Kilidlidir</span>
+                        </button>
+                        <span class="text-[11px] font-semibold text-slate-400">Dərsi keçin</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- "Bütün Sınaqlar" Uzun Düyməsi -->
+        <div class="px-5 pt-3">
+            <a href="sinaqlar.html"
+                class="w-full py-3 rounded-2xl bg-surface border border-slate-200 hover:border-brand text-ink font-extrabold text-xs shadow-2xs transition flex items-center justify-center space-x-2 active:scale-[0.99]">
+                <span>Bütün sınaqları göstər</span>
+                <span class="material-symbols-rounded text-[18px] text-brand">arrow_forward</span>
+            </a>
+        </div>
+    </section>
+
+    <!-- ==================== 4. NAİLİYYƏTLƏR ==================== -->
+    <section class="px-5 pt-4 space-y-2.5">
+        <div class="flex items-center justify-between">
+            <h2 class="text-sm font-extrabold text-ink">Nailiyyətlər</h2>
+            <a href="profil.html" class="text-xs font-bold text-muted hover:text-brand transition">hamısı →</a>
+        </div>
+
+        <div class="grid grid-cols-5 gap-2">
+            <div class="flex flex-col items-center p-2 rounded-2xl bg-surface border border-slate-200/75 shadow-2xs">
+                <div class="w-9 h-9 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center">
+                    <span class="material-symbols-rounded text-[20px]">emoji_events</span>
+                </div>
+                <span class="text-[10px] font-bold text-ink mt-1.5 text-center truncate w-full">İlk Addım</span>
+            </div>
+            <div class="flex flex-col items-center p-2 rounded-2xl bg-surface border border-slate-200/75 shadow-2xs">
+                <div class="w-9 h-9 rounded-xl bg-purple-100 text-brand flex items-center justify-center">
+                    <span class="material-symbols-rounded text-[20px]">bolt</span>
+                </div>
+                <span class="text-[10px] font-bold text-ink mt-1.5 text-center truncate w-full">Sürətli</span>
+            </div>
+            <div class="flex flex-col items-center p-2 rounded-2xl bg-surface border border-slate-200/75 shadow-2xs">
+                <div class="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center">
+                    <span class="material-symbols-rounded text-[20px]">verified</span>
+                </div>
+                <span class="text-[10px] font-bold text-ink mt-1.5 text-center truncate w-full">Snayper</span>
+            </div>
+            <div class="flex flex-col items-center p-2 rounded-2xl bg-surface border border-slate-200/75 shadow-2xs">
+                <div class="w-9 h-9 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center">
+                    <span class="material-symbols-rounded text-[20px]">local_fire_department</span>
+                </div>
+                <span class="text-[10px] font-bold text-ink mt-1.5 text-center truncate w-full">5 Gün</span>
+            </div>
+            <div class="flex flex-col items-center p-2 rounded-2xl bg-surface border border-slate-200/75 shadow-2xs">
+                <div class="w-9 h-9 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center">
+                    <span class="material-symbols-rounded text-[20px]">workspace_premium</span>
+                </div>
+                <span class="text-[10px] font-bold text-ink mt-1.5 text-center truncate w-full">Alim</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== 5. GÜNÜN SUALI & GÜNLÜK ÇARX & 1V1 ARENA ==================== -->
+    <section class="px-5 pt-5 space-y-3">
+        <h2 class="text-sm font-extrabold text-ink">Gündəlik Fəaliyyət & Oyunlar</h2>
+
+        <div class="grid grid-cols-2 gap-3">
+            <div onclick="openDailyPuzzle()"
+                class="cursor-pointer p-4 rounded-3xl bg-amber-50/70 border border-amber-200/80 flex flex-col justify-between space-y-3 hover:bg-amber-50 transition active:scale-[0.98]">
+                <div class="flex items-center justify-between">
+                    <div
+                        class="w-10 h-10 rounded-2xl bg-accentYellow text-ink flex items-center justify-center shadow-2xs">
+                        <span class="material-symbols-rounded text-[22px]">lightbulb</span>
+                    </div>
+                    <span
+                        class="text-[10px] font-extrabold bg-white border border-amber-200 px-2 py-0.5 rounded-full text-amber-800">+15
+                        XP</span>
+                </div>
+                <div>
+                    <h3 class="text-xs font-extrabold text-ink">Günün Sualı</h3>
+                    <p class="text-[11px] font-medium text-muted mt-0.5">Sürətli tapmaca</p>
+                </div>
+            </div>
+
+            <div onclick="openLuckyWheel()"
+                class="cursor-pointer p-4 rounded-3xl bg-purple-50/70 border border-purple-200/80 flex flex-col justify-between space-y-3 hover:bg-purple-50 transition active:scale-[0.98]">
+                <div class="flex items-center justify-between">
+                    <div
+                        class="w-10 h-10 rounded-2xl bg-purple-600 text-white flex items-center justify-center shadow-2xs">
+                        <span class="material-symbols-rounded text-[22px]">casino</span>
+                    </div>
+                    <span
+                        class="text-[10px] font-extrabold bg-white border border-purple-200 px-2 py-0.5 rounded-full text-purple-700">Hədiyyə</span>
+                </div>
+                <div>
+                    <h3 class="text-xs font-extrabold text-ink">Günlük Çarx</h3>
+                    <p class="text-[11px] font-medium text-muted mt-0.5">Hədiyyəni fırlat</p>
+                </div>
+            </div>
+        </div>
+
+        <a href="cempionlar.html"
+            class="p-4 rounded-3xl bg-brandLight/60 border border-indigo-200/80 flex items-center justify-between hover:bg-brandLight transition active:scale-[0.99] block w-full shadow-2xs">
+            <div class="flex items-center space-x-3.5">
+                <div class="w-11 h-11 rounded-2xl bg-brand text-white flex items-center justify-center shadow-2xs">
+                    <span class="material-symbols-rounded text-[22px]">swords</span>
+                </div>
+                <div>
+                    <h3 class="text-xs font-extrabold text-ink">1v1 Canlı Duel Arenası</h3>
+                    <p class="text-[11px] font-medium text-muted mt-0.5">Rəqiblə ani bilik yarışı</p>
+                </div>
+            </div>
+            <span class="material-symbols-rounded text-brand text-[20px]">arrow_forward</span>
+        </a>
+    </section>
+
+    <!-- ==================== 6. SON MÖVZU SINAQLARI ==================== -->
+    <section class="px-5 pt-5 space-y-2.5">
+        <div class="flex items-center justify-between">
+            <h2 class="text-sm font-extrabold text-ink">Mövzu Sınaqları</h2>
+            <a href="sinaqlar.html" class="text-xs font-bold text-muted hover:text-brand transition">Hamısı</a>
+        </div>
+
+        <div class="space-y-2.5">
+            <a href="sinaq-zali.html"
+                class="flex items-center justify-between p-3.5 rounded-3xl bg-surface border border-slate-200/80 hover:border-brand/40 transition active:scale-[0.99]">
+                <div class="flex items-center space-x-3.5">
+                    <div
+                        class="w-12 h-12 rounded-2xl bg-brandLight border border-indigo-200/60 text-brand flex items-center justify-center">
+                        <span class="material-symbols-rounded text-[24px]">calculate</span>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-extrabold text-ink">Hesab Əməlləri</h3>
+                        <p class="text-xs font-medium text-muted mt-0.5">25 sual · Riyazi məntiq</p>
+                    </div>
+                </div>
+                <span class="material-symbols-rounded text-muted text-[20px] mr-1">chevron_right</span>
+            </a>
+
+            <div onclick="openLockedModal()"
+                class="cursor-pointer flex items-center justify-between p-3.5 rounded-3xl bg-slate-50 border border-slate-200/80 hover:border-slate-300 transition active:scale-[0.99]">
+                <div class="flex items-center space-x-3.5">
+                    <div
+                        class="w-12 h-12 rounded-2xl bg-slate-200/70 border border-slate-300/60 text-slate-500 flex items-center justify-center">
+                        <span class="material-symbols-rounded text-[22px]">lock</span>
+                    </div>
+                    <div>
+                        <div class="flex items-center space-x-1.5">
+                            <h3 class="text-sm font-extrabold text-slate-600">Qrafik və Cədvəllər</h3>
+                            <span
+                                class="text-[10px] font-bold bg-slate-200 text-slate-600 px-2 py-0.5 rounded-md">Kilidli</span>
+                        </div>
+                        <p class="text-xs font-medium text-slate-400 mt-0.5">Əvvəlcə mövzu dərsini tamamlayın</p>
+                    </div>
+                </div>
+                <span class="material-symbols-rounded text-slate-400 text-[20px] mr-1">help</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== 7. YAN MENYU (DRAWER) ==================== -->
+    <div id="drawerBackdrop" onclick="toggleDrawer(false)"
+        class="fixed inset-0 bg-slate-900/35 backdrop-blur-[2px] z-40 opacity-0 invisible">
+    </div>
+
+    <aside id="sideDrawer"
+        class="fixed top-0 bottom-0 left-0 w-72 bg-white z-50 border-r border-slate-200 shadow-2xl p-5 flex flex-col justify-between -translate-x-full rounded-r-3xl">
+
+        <div class="space-y-3">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                <a href="profil.html" class="flex items-center space-x-2.5">
+                    <div
+                        class="w-9 h-9 rounded-full bg-brandLight border border-indigo-200 text-brand flex items-center justify-center font-extrabold text-xs">
+                        FH
+                    </div>
+                    <div>
+                        <span class="text-sm font-extrabold text-ink block leading-none">Fərid Hümbətov</span>
+                        <span class="text-[11px] font-medium text-muted">Profilə keç →</span>
+                    </div>
+                </a>
+                <button onclick="toggleDrawer(false)"
+                    class="w-7 h-7 rounded-full bg-surface border border-slate-200/80 flex items-center justify-center text-muted hover:text-ink transition">
+                    <span class="material-symbols-rounded text-[16px]">close</span>
+                </button>
+            </div>
+
+            <div class="p-2.5 rounded-2xl bg-surface border border-slate-200/70 flex items-center justify-between">
+                <div>
+                    <span class="text-[10px] font-bold text-muted uppercase block">Cari Fənn</span>
+                    <span id="drawerSubjectName" class="text-xs font-extrabold text-ink">Məntiq</span>
+                </div>
+                <button onclick="changeSubject()"
+                    class="px-2.5 py-1 rounded-xl bg-white border border-slate-200/80 text-[11px] font-extrabold text-brand">
+                    Dəyiş
+                </button>
+            </div>
+
+            <!-- Bütün menyu linkləri (Scroll-suz tək ekrana rahat sığacaq şəkildə yığcam) -->
+            <nav class="space-y-0.5 text-xs font-bold text-ink">
+                <a href="panel.html"
+                    class="flex items-center space-x-2.5 px-3 py-2 rounded-xl bg-brandLight text-brand">
+                    <span class="material-symbols-rounded text-[18px]">dashboard</span><span>Əsas Panel</span>
+                </a>
+                <a href="sinaqlar.html"
+                    class="flex items-center space-x-2.5 px-3 py-2 rounded-xl hover:bg-surface transition">
+                    <span class="material-symbols-rounded text-[18px] text-muted">quiz</span><span>Sınaqlar
+                        Siyahısı</span>
+                </a>
+                <a href="cempionlar.html"
+                    class="flex items-center space-x-2.5 px-3 py-2 rounded-xl hover:bg-surface transition">
+                    <span class="material-symbols-rounded text-[18px] text-muted">swords</span><span>Çempionlar
+                        Liqası</span>
+                </a>
+                <a href="tedbirler.html"
+                    class="flex items-center space-x-2.5 px-3 py-2 rounded-xl hover:bg-surface transition">
+                    <span class="material-symbols-rounded text-[18px] text-muted">event</span><span>Tədbirlər</span>
+                </a>
+                <a href="reytinq.html"
+                    class="flex items-center space-x-2.5 px-3 py-2 rounded-xl hover:bg-surface transition">
+                    <span class="material-symbols-rounded text-[18px] text-muted">leaderboard</span><span>Reytinq və
+                        Liqalar</span>
+                </a>
+                <a href="qruplar.html"
+                    class="flex items-center space-x-2.5 px-3 py-2 rounded-xl hover:bg-surface transition">
+                    <span class="material-symbols-rounded text-[18px] text-muted">groups</span><span>Qruplar</span>
+                </a>
+                <a href="statistika.html"
+                    class="flex items-center space-x-2.5 px-3 py-2 rounded-xl hover:bg-surface transition">
+                    <span
+                        class="material-symbols-rounded text-[18px] text-muted">query_stats</span><span>Statistikam</span>
+                </a>
+                <a href="market.html"
+                    class="flex items-center space-x-2.5 px-3 py-2 rounded-xl hover:bg-surface transition">
+                    <span class="material-symbols-rounded text-[18px] text-muted">storefront</span><span>IQ
+                        Market</span>
+                </a>
+                <a href="movzu.html"
+                    class="flex items-center space-x-2.5 px-3 py-2 rounded-xl hover:bg-surface transition">
+                    <span class="material-symbols-rounded text-[18px] text-muted">menu_book</span><span>Mövzu
+                        İzahı</span>
+                </a>
+                <a href="mesajlar.html"
+                    class="flex items-center space-x-2.5 px-3 py-2 rounded-xl hover:bg-surface transition">
+                    <span class="material-symbols-rounded text-[18px] text-muted">chat</span><span>Mesajlar</span>
+                </a>
+                <a href="elanlar.html"
+                    class="flex items-center space-x-2.5 px-3 py-2 rounded-xl hover:bg-surface transition">
+                    <span class="material-symbols-rounded text-[18px] text-muted">campaign</span><span>Elanlar</span>
+                </a>
+                <a href="ideyalar.html"
+                    class="flex items-center space-x-2.5 px-3 py-2 rounded-xl hover:bg-surface transition">
+                    <span
+                        class="material-symbols-rounded text-[18px] text-muted">tips_and_updates</span><span>İdeyalar</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- Alt: Yalnız Hesabdan Çıxış düyməsi -->
+        <div class="pt-2 border-t border-slate-100 text-xs font-bold">
+            <a href="auth.html"
+                class="flex items-center justify-center space-x-1 w-full py-2 rounded-xl text-rose-500 hover:bg-rose-50 transition">
+                <span class="material-symbols-rounded text-[16px]">logout</span>
+                <span>Hesabdan Çıxış</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- ==================== 8. MODALLAR ==================== -->
+    <div id="lockedModal" onclick="closeLockedModal()"
+        class="fixed inset-0 bg-slate-900/40 backdrop-blur-[2px] z-50 hidden flex items-center justify-center p-5">
+        <div onclick="event.stopPropagation()"
+            class="bg-white rounded-3xl border border-slate-200 max-w-xs w-full p-6 text-center space-y-4 shadow-xl">
+            <div
+                class="w-12 h-12 rounded-2xl bg-amber-50 border border-amber-200/80 text-amber-600 flex items-center justify-center mx-auto">
+                <span class="material-symbols-rounded text-[26px]">lock</span>
+            </div>
+            <div class="space-y-1.5">
+                <h3 class="text-base font-extrabold text-ink">Sınaq Kilidlidir</h3>
+                <p class="text-xs text-muted leading-relaxed">
+                    Bu dərsi keçdikdən sonra yaza bilərsiniz, yanlışlıq olduğunu düşünürsünüzsə varsa
+                    <a href="mesajlar.html"
+                        class="text-brand font-extrabold underline hover:text-brandDark">[müəllim]</a>
+                    ilə əlaqə saxlayın.
+                </p>
+            </div>
+            <div class="flex gap-2 pt-1">
+                <button onclick="closeLockedModal()"
+                    class="flex-1 py-2.5 rounded-xl bg-surface border border-slate-200/80 text-xs font-bold text-ink">
+                    Bağla
+                </button>
+                <a href="movzu.html" class="flex-1 py-2.5 rounded-xl bg-brand text-white text-xs font-bold">
+                    Dərsə keç
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div id="dailyPuzzleModal" onclick="closeDailyPuzzle()"
+        class="fixed inset-0 bg-slate-900/40 backdrop-blur-[2px] z-50 hidden flex items-center justify-center p-5">
+        <div onclick="event.stopPropagation()"
+            class="bg-white rounded-3xl border border-slate-200 max-w-xs w-full p-5 space-y-4 shadow-xl">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-2.5">
+                <span class="text-xs font-extrabold text-brand flex items-center gap-1">
+                    <span class="material-symbols-rounded text-[18px]">lightbulb</span> Günün Sualı (+15 XP)
+                </span>
+                <button onclick="closeDailyPuzzle()" class="text-muted text-xs font-bold">✕</button>
+            </div>
+            <p class="text-xs font-bold text-ink leading-relaxed">
+                2, 6, 14, 30, ? ardıcıllığında sual işarəsinin yerinə hansı ədəd uyğun gəlir?
+            </p>
+            <div class="grid grid-cols-2 gap-2 text-xs font-bold">
+                <button onclick="alert('Yanlış cavab!'); closeDailyPuzzle();"
+                    class="py-2 rounded-xl bg-surface border border-slate-200 hover:border-brand">58</button>
+                <button onclick="alert('Təbriklər! +15 XP qazandınız!'); closeDailyPuzzle();"
+                    class="py-2 rounded-xl bg-surface border border-slate-200 hover:border-brand">62</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="luckyWheelModal" onclick="closeLuckyWheel()"
+        class="fixed inset-0 bg-slate-900/40 backdrop-blur-[2px] z-50 hidden flex items-center justify-center p-5">
+        <div onclick="event.stopPropagation()"
+            class="bg-white rounded-3xl border border-slate-200 max-w-xs w-full p-6 text-center space-y-4 shadow-xl">
+            <div class="w-14 h-14 rounded-2xl bg-purple-100 text-purple-600 flex items-center justify-center mx-auto">
+                <span class="material-symbols-rounded text-[30px]">casino</span>
+            </div>
+            <div class="space-y-1">
+                <h3 class="text-base font-extrabold text-ink">Günlük Çarx</h3>
+                <p class="text-xs text-muted">Hədiyyə qazanmaq üçün çarxı fırladın!</p>
+            </div>
+            <div class="p-4 rounded-2xl bg-purple-50 text-purple-800 font-extrabold text-sm border border-purple-200">
+                🎉 Təbriklər! +50 XP Qazandınız!
+            </div>
+            <button onclick="closeLuckyWheel()" class="w-full py-2.5 rounded-xl bg-brand text-white text-xs font-bold">
+                Götür və Bağla
+            </button>
+        </div>
+    </div>
+
+    <div id="inboxModal" onclick="closeInboxModal()"
+        class="fixed inset-0 bg-slate-900/35 backdrop-blur-[2px] z-50 hidden flex items-center justify-center p-5">
+        <div onclick="event.stopPropagation()"
+            class="bg-white rounded-3xl border border-slate-200 max-w-xs w-full p-5 space-y-3 shadow-xl">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-2.5">
+                <h3 class="text-sm font-extrabold text-ink">Bildirişlər</h3>
+                <button onclick="closeInboxModal()"
+                    class="w-7 h-7 rounded-full bg-surface text-xs font-bold text-muted">✕</button>
+            </div>
+            <div class="space-y-2 text-xs">
+                <div class="p-3 rounded-2xl bg-amber-50/80 border border-amber-200/60 text-ink">
+                    <span class="font-extrabold block">⚡ Yeni Çempionlar Liqası!</span>
+                    <span class="text-muted">Axşam saat 20:00-da 1v1 turnir başlayır.</span>
+                </div>
+                <div class="p-3 rounded-2xl bg-surface border border-slate-200/60">
+                    <span class="font-extrabold block">✅ Nəticə hazırdır</span>
+                    <span class="text-muted">Qarışıq sınaqdan +63 XP qazandınız.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== 9. JAVASCRIPT ==================== -->
+    <script>
+        function toggleDrawer(open) {
+            const drawer = document.getElementById('sideDrawer');
+            const backdrop = document.getElementById('drawerBackdrop');
+            if (open) {
+                drawer.classList.remove('-translate-x-full');
+                backdrop.classList.remove('opacity-0', 'invisible');
+                backdrop.classList.add('opacity-100', 'visible');
+                document.body.style.overflow = 'hidden';
+            } else {
+                drawer.classList.add('-translate-x-full');
+                backdrop.classList.remove('opacity-100', 'visible');
+                backdrop.classList.add('opacity-0', 'invisible');
+                document.body.style.overflow = '';
+            }
+        }
+
+        const subjects = ['Məntiq', 'İnformatika', 'İngilis dili'];
+        let subIndex = 0;
+        function changeSubject() {
+            subIndex = (subIndex + 1) % subjects.length;
+            document.getElementById('drawerSubjectName').innerText = subjects[subIndex];
+        }
+
+        function openLockedModal() { document.getElementById('lockedModal').classList.remove('hidden'); }
+        function closeLockedModal() { document.getElementById('lockedModal').classList.add('hidden'); }
+
+        function openDailyPuzzle() { document.getElementById('dailyPuzzleModal').classList.remove('hidden'); }
+        function closeDailyPuzzle() { document.getElementById('dailyPuzzleModal').classList.add('hidden'); }
+
+        function openLuckyWheel() { document.getElementById('luckyWheelModal').classList.remove('hidden'); }
+        function closeLuckyWheel() { document.getElementById('luckyWheelModal').classList.add('hidden'); }
+
+        function openInboxModal() { document.getElementById('inboxModal').classList.remove('hidden'); }
+        function closeInboxModal() { document.getElementById('inboxModal').classList.add('hidden'); }
+    </script>
+
+</body>
+
+</html>

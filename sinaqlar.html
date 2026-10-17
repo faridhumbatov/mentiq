@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="az">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Məntiq.ON - Sınaqlar Siyahısı</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: '#6F61EF',
+                        brandDark: '#5849E0',
+                        brandLight: '#EEECFC',
+                        accentYellow: '#FCD53F',
+                        ink: '#1E2235',
+                        muted: '#7E849B',
+                        surface: '#F8F9FC'
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #FFFFFF;
+            color: #1E2235;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .material-symbols-rounded {
+            font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+            user-select: none;
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        #drawerBackdrop {
+            transition: opacity 0.28s ease, visibility 0.28s ease;
+        }
+
+        #sideDrawer {
+            transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex flex-col pb-24 max-w-md mx-auto relative bg-surface border-x border-slate-100">
+
+    <!-- ==================== 1. STABİL HEADER ==================== -->
+    <header class="px-5 pt-4 pb-2 flex items-center justify-between bg-white border-b border-slate-100">
+        <div class="flex items-center space-x-3">
+            <button onclick="toggleDrawer(true)"
+                class="w-10 h-10 rounded-2xl bg-surface border border-slate-200/80 hover:bg-slate-100 flex items-center justify-center text-ink active:scale-95 transition focus:outline-none">
+                <span class="material-symbols-rounded text-[22px]">menu</span>
+            </button>
+
+            <div>
+                <div class="flex items-center space-x-1.5">
+                    <span class="text-[11px] font-bold text-ink">Bürünc 1</span>
+                    <span class="text-[10px] font-semibold text-muted">· 62%</span>
+                </div>
+                <div class="w-24 h-2 bg-slate-100 rounded-full overflow-hidden mt-1 border border-slate-200/60">
+                    <div class="bg-brand h-full rounded-full" style="width: 62%"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex items-center space-x-2">
+            <a href="market.html"
+                class="flex items-center space-x-1 bg-amber-50/90 border border-amber-200/80 px-3 py-1.5 rounded-full active:scale-95 transition">
+                <span class="material-symbols-rounded text-amber-500 text-[16px]">bolt</span>
+                <span class="text-xs font-extrabold text-amber-900">323 XP</span>
+            </a>
+
+            <button onclick="openInboxModal()"
+                class="w-10 h-10 rounded-2xl bg-surface border border-slate-200/80 hover:bg-slate-100 flex items-center justify-center text-ink relative active:scale-95 transition">
+                <span class="material-symbols-rounded text-[20px]">notifications</span>
+                <span class="absolute top-2.5 right-2.5 w-2 h-2 bg-rose-500 rounded-full ring-2 ring-white"></span>
+            </button>
+        </div>
+    </header>
+
+
+    <!-- ==================== 2. YUXARI TAB KEÇİDİ (Mövzu / Qarışıq Testlər) ==================== -->
+    <section class="px-5 pt-4 bg-white pb-3 border-b border-slate-100">
+        <div class="grid grid-cols-2 p-1 rounded-2xl bg-surface border border-slate-200/80">
+            <button onclick="switchMainTab('topics')" id="tabTopicsBtn"
+                class="py-2.5 rounded-xl text-xs font-extrabold transition bg-white text-brand shadow-xs">
+                Mövzu Sınaqları
+            </button>
+            <button onclick="switchMainTab('mixed')" id="tabMixedBtn"
+                class="py-2.5 rounded-xl text-xs font-extrabold transition text-muted hover:text-ink">
+                Qarışıq Testlər
+            </button>
+        </div>
+    </section>
+
+
+    <!-- ==================== 3. AXTARIŞ VƏ FİLTRLƏR ==================== -->
+    <section class="px-5 pt-4 space-y-3">
+        <div class="relative">
+            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-muted">
+                <span class="material-symbols-rounded text-[20px]">search</span>
+            </span>
+            <input type="text" id="searchInput" oninput="filterTests()" placeholder="Sınaq və ya mövzu adı axtar..."
+                class="w-full pl-10 pr-4 py-3 rounded-2xl bg-white border border-slate-200 text-xs font-bold text-ink focus:border-brand shadow-2xs outline-none transition">
+        </div>
+
+        <!-- Filtr düymələri -->
+        <div class="flex items-center space-x-2 overflow-x-auto no-scrollbar pb-1">
+            <button onclick="setFilter('all')" id="filter-all"
+                class="px-4 py-1.5 rounded-full bg-brand text-white text-xs font-extrabold flex-shrink-0 transition shadow-xs">
+                Hamısı
+            </button>
+            <button onclick="setFilter('unlocked')" id="filter-unlocked"
+                class="px-4 py-1.5 rounded-full bg-white border border-slate-200 text-muted text-xs font-extrabold flex-shrink-0 transition">
+                Açıq olanlar
+            </button>
+            <button onclick="setFilter('completed')" id="filter-completed"
+                class="px-4 py-1.5 rounded-full bg-white border border-slate-200 text-muted text-xs font-extrabold flex-shrink-0 transition">
+                Həll edilənlər
+            </button>
+            <button onclick="setFilter('uncompleted')" id="filter-uncompleted"
+                class="px-4 py-1.5 rounded-full bg-white border border-slate-200 text-muted text-xs font-extrabold flex-shrink-0 transition">
+                Həll edilməyənlər
+            </button>
+        </div>
+    </section>
+
+
+    <!-- ==================== BÖLMƏ 1: MÖVZU SINAQLARI (ÖZƏL İKONLU KARTLAR) ==================== -->
+    <section id="topicsSection" class="px-5 pt-4 space-y-3">
+        <div class="flex items-center justify-between">
+            <h2 class="text-sm font-extrabold text-ink">Mövzu Sınaqları (23 Mövzu)</h2>
+            <span class="text-[11px] font-bold text-muted">5 xətt proqres</span>
+        </div>
+
+        <div id="topicsContainer" class="space-y-3">
+            <!-- Dinamik render olunur -->
+        </div>
+    </section>
+
+
+    <!-- ==================== BÖLMƏ 2: QARIŞIQ TESTLƏR VƏ QUİZLƏR ==================== -->
+    <section id="mixedSection" class="px-5 pt-4 space-y-3 hidden">
+        <div class="flex items-center justify-between">
+            <h2 class="text-sm font-extrabold text-ink">Qarışıq Testlər və Quizlər</h2>
+            <span class="text-[11px] font-bold text-muted">Ümumi sınaqlar</span>
+        </div>
+
+        <div class="space-y-3">
+            <!-- Kart 1 -->
+            <div
+                class="relative p-5 rounded-[28px] bg-gradient-to-br from-brand to-brandDark text-white shadow-md shadow-brand/10 space-y-3">
+                <div
+                    class="absolute right-4 top-4 w-10 h-10 rounded-2xl bg-white/15 border border-white/20 flex items-center justify-center text-white">
+                    <span class="material-symbols-rounded text-[20px]">psychology</span>
+                </div>
+                <div class="space-y-0.5">
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-white/75">Ümumi İmtahan</span>
+                    <h3 class="text-base font-extrabold text-white">Qarışıq Sınaq #14</h3>
+                    <p class="text-xs text-white/80">50 sual · 90 dəqiqə</p>
+                </div>
+                <div class="flex items-center space-x-1.5 py-1">
+                    <span class="h-1.5 w-6 rounded-full bg-accentYellow"></span>
+                    <span class="h-1.5 w-6 rounded-full bg-accentYellow"></span>
+                    <span class="h-1.5 w-6 rounded-full bg-accentYellow"></span>
+                    <span class="h-1.5 w-6 rounded-full bg-white/25"></span>
+                    <span class="h-1.5 w-6 rounded-full bg-white/25"></span>
+                </div>
+                <div class="flex items-center justify-between pt-1">
+                    <a href="sinaq-zali.html"
+                        class="px-4 py-2 rounded-full bg-accentYellow text-ink font-extrabold text-xs shadow-xs active:scale-95 transition inline-flex items-center space-x-1">
+                        <span>Başla</span>
+                        <span class="material-symbols-rounded text-[15px]">arrow_forward</span>
+                    </a>
+                    <span class="text-[11px] font-semibold text-white/80">Tamamlanma: 0%</span>
+                </div>
+            </div>
+
+            <!-- Kart 2 -->
+            <div class="relative p-5 rounded-[28px] bg-accentYellow text-ink shadow-md shadow-amber-500/10 space-y-3">
+                <div
+                    class="absolute right-4 top-4 w-10 h-10 rounded-2xl bg-ink/10 border border-ink/10 flex items-center justify-center text-ink">
+                    <span class="material-symbols-rounded text-[20px]">bolt</span>
+                </div>
+                <div class="space-y-0.5">
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-ink/60">Sürət Quizi</span>
+                    <h3 class="text-base font-extrabold text-ink">Operatorlar Bloku</h3>
+                    <p class="text-xs text-ink/75">20 sual · 30 dəqiqə</p>
+                </div>
+                <div class="flex items-center space-x-1.5 py-1">
+                    <span class="h-1.5 w-6 rounded-full bg-ink"></span>
+                    <span class="h-1.5 w-6 rounded-full bg-ink"></span>
+                    <span class="h-1.5 w-6 rounded-full bg-ink"></span>
+                    <span class="h-1.5 w-6 rounded-full bg-ink"></span>
+                    <span class="h-1.5 w-6 rounded-full bg-ink/20"></span>
+                </div>
+                <div class="flex items-center justify-between pt-1">
+                    <a href="sinaq-zali.html"
+                        class="px-4 py-2 rounded-full bg-ink text-white font-extrabold text-xs active:scale-95 transition inline-flex items-center space-x-1">
+                        <span>Başla</span>
+                        <span class="material-symbols-rounded text-[15px]">arrow_forward</span>
+                    </a>
+                    <span class="text-[11px] font-bold text-ink/70">Tamamlanma: 35%</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ==================== MÖVZU MODALI ==================== -->
+    <div id="topicModal" onclick="closeTopicModal()"
+        class="fixed inset-0 bg-slate-900/40 backdrop-blur-[2px] z-50 hidden flex items-center justify-center p-5">
+        <div onclick="event.stopPropagation()"
+            class="bg-white rounded-3xl border border-slate-200 max-w-xs w-full p-6 text-center space-y-4 shadow-2xl">
+            <div class="w-14 h-14 rounded-2xl bg-brandLight text-brand flex items-center justify-center mx-auto">
+                <span class="material-symbols-rounded text-[28px]">quiz</span>
+            </div>
+            <div class="space-y-1">
+                <h3 id="modalTopicTitle" class="text-base font-extrabold text-ink">Mövzu Adı</h3>
+                <p class="text-xs text-muted">Bu mövzu üzrə 5 çətinlik səviyyəsində test mövcuddur.</p>
+            </div>
+
+            <div class="space-y-2 pt-2">
+                <a id="modalContinueBtn" href="sinaq-zali.html"
+                    class="w-full py-3 rounded-2xl bg-brand text-white font-extrabold text-xs shadow-md shadow-brand/20 active:scale-95 transition block">
+                    Davam et
+                </a>
+                <button onclick="openPreviousTests()"
+                    class="w-full py-2.5 rounded-2xl bg-surface border border-slate-200 text-xs font-bold text-muted hover:text-ink transition">
+                    Öncəki sınaqları işlə
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ==================== YAN MENYU (DRAWER) ==================== -->
+    <div id="drawerBackdrop" onclick="toggleDrawer(false)"
+        class="fixed inset-0 bg-slate-900/35 backdrop-blur-[2px] z-40 opacity-0 invisible">
+    </div>
+
+    <aside id="sideDrawer"
+        class="fixed top-0 bottom-0 left-0 w-72 bg-white z-50 border-r border-slate-200 shadow-2xl p-5 flex flex-col justify-between -translate-x-full rounded-r-3xl">
+
+        <div class="space-y-3">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                <a href="profil.html" class="flex items-center space-x-2.5">
+                    <div
+                        class="w-9 h-9 rounded-full bg-brandLight border border-indigo-200 text-brand flex items-center justify-center font-extrabold text-xs">
+                        FH
+                    </div>
+                    <div>
+                        <span class="text-sm font-extrabold text-ink block leading-none">Fərid Hümbətov</span>
+                        <span class="text-[11px] font-medium text-muted">Profilə keç →</span>
+                    </div>
+                </a>
+                <button onclick="toggleDrawer(false)"
+                    class="w-7 h-7 rounded-full bg-surface border border-slate-200/80 flex items-center justify-center text-muted hover:text-ink transition">
+                    <span class="material-symbols-rounded text-[16px]">close</span>
+                </button>
+            </div>
+
+            <!-- Bütün menyu linkləri -->
+            <nav class="space-y-0.5 text-xs font-bold text-ink">
+                <a href="panel.html"
+                    class="flex items-center space-x-2.5 px-3 py-2 rounded-xl hover:bg-surface transition">
+                    <span class="material-symbols-rounded text-[18px] text-muted">dashboard</span><span>Əsas
+                        Panel</span>
+                </a>
+                <a href="sinaqlar.html"
+                    class="flex items-center space-x-2.5 px-3 py-2 rounded-xl bg-brandLight text-brand">
+                    <span class="material-symbols-rounded text-[18px]">quiz</span><span>Sınaqlar Siyahısı</span>
+                </a>
+                <a href="cempionlar.html"
+                    class="flex items-center space-x-2.5 px-3 py-2 rounded-xl hover:bg-surface transition">
+                    <span class="material-symbols-rounded text-[18px] text-muted">swords</span><span>Çempionlar
+                        Liqası</span>
+                </a>
+                <a href="tedbirler.html"
+                    class="flex items-center space-x-2.5 px-3 py-2 rounded-xl hover:bg-surface transition">
+                    <span class="material-symbols-rounded text-[18px] text-muted">event</span><span>Tədbirlər</span>
+                </a>
+                <a href="reytinq.html"
+                    class="flex items-center space-x-2.5 px-3 py-2 rounded-xl hover:bg-surface transition">
+                    <span class="material-symbols-rounded text-[18px] text-muted">leaderboard</span><span>Reytinq və
+                        Liqalar</span>
+                </a>
+                <a href="qruplar.html"
+                    class="flex items-center space-x-2.5 px-3 py-2 rounded-xl hover:bg-surface transition">
+                    <span class="material-symbols-rounded text-[18px] text-muted">groups</span><span>Qruplar</span>
+                </a>
+                <a href="statistika.html"
+                    class="flex items-center space-x-2.5 px-3 py-2 rounded-xl hover:bg-surface transition">
+                    <span
+                        class="material-symbols-rounded text-[18px] text-muted">query_stats</span><span>Statistikam</span>
+                </a>
+                <a href="market.html"
+                    class="flex items-center space-x-2.5 px-3 py-2 rounded-xl hover:bg-surface transition">
+                    <span class="material-symbols-rounded text-[18px] text-muted">storefront</span><span>IQ
+                        Market</span>
+                </a>
+                <a href="movzu.html"
+                    class="flex items-center space-x-2.5 px-3 py-2 rounded-xl hover:bg-surface transition">
+                    <span class="material-symbols-rounded text-[18px] text-muted">menu_book</span><span>Mövzu
+                        İzahı</span>
+                </a>
+                <a href="mesajlar.html"
+                    class="flex items-center space-x-2.5 px-3 py-2 rounded-xl hover:bg-surface transition">
+                    <span class="material-symbols-rounded text-[18px] text-muted">chat</span><span>Mesajlar</span>
+                </a>
+                <a href="elanlar.html"
+                    class="flex items-center space-x-2.5 px-3 py-2 rounded-xl hover:bg-surface transition">
+                    <span class="material-symbols-rounded text-[18px] text-muted">campaign</span><span>Elanlar</span>
+                </a>
+                <a href="ideyalar.html"
+                    class="flex items-center space-x-2.5 px-3 py-2 rounded-xl hover:bg-surface transition">
+                    <span
+                        class="material-symbols-rounded text-[18px] text-muted">tips_and_updates</span><span>İdeyalar</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- Alt: Hesabdan Çıxış -->
+        <div class="pt-2 border-t border-slate-100 text-xs font-bold">
+            <a href="auth.html"
+                class="flex items-center justify-center space-x-1 w-full py-2 rounded-xl text-rose-500 hover:bg-rose-50 transition">
+                <span class="material-symbols-rounded text-[16px]">logout</span>
+                <span>Hesabdan Çıxış</span>
+            </a>
+        </div>
+    </aside>
+
+
+    <!-- ==================== MODAL (BİLDİRİŞLƏR) ==================== -->
+    <div id="inboxModal" onclick="closeInboxModal()"
+        class="fixed inset-0 bg-slate-900/35 backdrop-blur-[2px] z-50 hidden flex items-center justify-center p-5">
+        <div onclick="event.stopPropagation()"
+            class="bg-white rounded-3xl border border-slate-200 max-w-xs w-full p-5 space-y-3 shadow-xl">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-2.5">
+                <h3 class="text-sm font-extrabold text-ink">Bildirişlər</h3>
+                <button onclick="closeInboxModal()"
+                    class="w-7 h-7 rounded-full bg-surface text-xs font-bold text-muted">✕</button>
+            </div>
+            <div class="space-y-2 text-xs">
+                <div class="p-3 rounded-2xl bg-amber-50/80 border border-amber-200/60 text-ink">
+                    <span class="font-extrabold block">⚡ Yeni Sınaq Əlavə Olundu!</span>
+                    <span class="text-muted">Dərs 13 sınaqları sistemə yükləndi.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ==================== JAVASCRIPT MƏNTİQİ ==================== -->
+    <script>
+        const topics = [
+            { id: 1, name: "Dərs 1. Şifrələr", status: "completed", progressBars: 5, subtitle: "25 sual · 40 dəqiqə", icon: "password" },
+            { id: 2, name: "Dərs 2. Operatorlar (I hissə)", status: "completed", progressBars: 4, subtitle: "20 sual · 30 dəqiqə", icon: "code" },
+            { id: 3, name: "Dərs 3. Operatorlar (II hissə)", status: "uncompleted", progressBars: 2, subtitle: "20 sual · 30 dəqiqə", icon: "terminal" },
+            { id: 4, name: "Dərs 4. Ardıcıllıqlar", status: "uncompleted", progressBars: 0, subtitle: "30 sual · 45 dəqiqə", icon: "linear_scale" },
+            { id: 5, name: "Dərs 5. Ədəd-şəkil münasibətləri", status: "uncompleted", progressBars: 0, subtitle: "25 sual · 35 dəqiqə", icon: "grid_view" },
+            { id: 6, name: "Dərs 6. Cədvəllər", status: "uncompleted", progressBars: 0, subtitle: "30 sual · 50 dəqiqə", icon: "table_chart" },
+            { id: 7, name: "Dərs 7. Hesab əməlləri (I hissə)", status: "uncompleted", progressBars: 0, subtitle: "20 sual · 30 dəqiqə", icon: "calculate" },
+            { id: 8, name: "Dərs 8. Hesab əməlləri (II hissə)", status: "uncompleted", progressBars: 0, subtitle: "25 sual · 40 dəqiqə", icon: "functions" },
+            { id: 9, name: "Dərs 9. Tərəzilər", status: "uncompleted", progressBars: 0, subtitle: "15 sual · 20 dəqiqə", icon: "balance" },
+            { id: 10, name: "Dərs 10. Şəkil əlaqələri", status: "uncompleted", progressBars: 0, subtitle: "20 sual · 30 dəqiqə", icon: "imagesmode" },
+            { id: 11, name: "Dərs 11. Qatlanmış kağızın kəsilməsi", status: "uncompleted", progressBars: 0, subtitle: "15 sual · 25 dəqiqə", icon: "content_cut" },
+            { id: 12, name: "Dərs 12. Fəza fiqurları", status: "uncompleted", progressBars: 0, subtitle: "20 sual · 35 dəqiqə", icon: "deployed_code" },
+            { id: 13, name: "Dərs 13. Məntiq oyunları", status: "locked", progressBars: 0, subtitle: "30 sual · 45 dəqiqə", icon: "extension" },
+            { id: 14, name: "Dərs 14. Sahə və perimetr", status: "locked", progressBars: 0, subtitle: "20 sual · 30 dəqiqə", icon: "shapes" },
+            { id: 15, name: "Dərs 15. Mətnin məntiqi təhlili", status: "locked", progressBars: 0, subtitle: "25 sual · 40 dəqiqə", icon: "article" },
+            { id: 16, name: "Dərs 16. Faiz məsələləri", status: "locked", progressBars: 0, subtitle: "20 sual · 30 dəqiqə", icon: "percent" },
+            { id: 17, name: "Dərs 17. Yaş məsələləri", status: "locked", progressBars: 0, subtitle: "15 sual · 25 dəqiqə", icon: "hourglass_top" },
+            { id: 18, name: "Dərs 18. İş-hovuz məsələləri", status: "locked", progressBars: 0, subtitle: "20 sual · 30 dəqiqə", icon: "pool" },
+            { id: 19, name: "Dərs 19. Ehtimal məsələləri", status: "locked", progressBars: 0, subtitle: "15 sual · 20 dəqiqə", icon: "casino" },
+            { id: 20, name: "Dərs 20. Sürət məsələləri", status: "locked", progressBars: 0, subtitle: "25 sual · 40 dəqiqə", icon: "speed" },
+            { id: 21, name: "Dərs 21. Ədəd məsələləri", status: "locked", progressBars: 0, subtitle: "20 sual · 30 dəqiqə", icon: "pin" },
+            { id: 22, name: "Dərs 22. Cədvəl, diaqram və qrafiklər", status: "locked", progressBars: 0, subtitle: "30 sual · 50 dəqiqə", icon: "bar_chart" },
+            { id: 23, name: "Dərs 23. Analogiya və anaqramlar", status: "locked", progressBars: 0, subtitle: "20 sual · 30 dəqiqə", icon: "alt_route" }
+        ];
+
+        let currentFilter = 'all';
+
+        function switchMainTab(tab) {
+            const topicsSec = document.getElementById('topicsSection');
+            const mixedSec = document.getElementById('mixedSection');
+            const btnTopics = document.getElementById('tabTopicsBtn');
+            const btnMixed = document.getElementById('tabMixedBtn');
+
+            if (tab === 'topics') {
+                topicsSec.classList.remove('hidden');
+                mixedSec.classList.add('hidden');
+                btnTopics.className = "py-2.5 rounded-xl text-xs font-extrabold transition bg-white text-brand shadow-xs";
+                btnMixed.className = "py-2.5 rounded-xl text-xs font-extrabold transition text-muted hover:text-ink";
+            } else {
+                topicsSec.classList.add('hidden');
+                mixedSec.classList.remove('hidden');
+                btnMixed.className = "py-2.5 rounded-xl text-xs font-extrabold transition bg-white text-brand shadow-xs";
+                btnTopics.className = "py-2.5 rounded-xl text-xs font-extrabold transition text-muted hover:text-ink";
+            }
+        }
+
+        function renderTopics(filteredList) {
+            const container = document.getElementById('topicsContainer');
+            container.innerHTML = '';
+
+            filteredList.forEach(t => {
+                const isLocked = t.status === 'locked';
+                const card = document.createElement('div');
+
+                let barsHTML = '';
+                for (let i = 1; i <= 5; i++) {
+                    const activeColor = isLocked ? 'bg-slate-200' : (i <= t.progressBars ? 'bg-brand' : 'bg-slate-200');
+                    barsHTML += `<span class="h-1.5 flex-1 rounded-full ${activeColor}"></span>`;
+                }
+
+                if (isLocked) {
+                    card.className = "relative p-4 rounded-[26px] bg-white border border-slate-200/90 shadow-2xs opacity-70 space-y-2.5";
+                    card.innerHTML = `
+            <div class="absolute right-4 top-4 w-9 h-9 rounded-2xl bg-slate-100 border border-slate-200/60 flex items-center justify-center text-slate-400">
+              <span class="material-symbols-rounded text-[18px]">lock</span>
+            </div>
+            <div class="space-y-0.5">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">Kilidli Sınaq</span>
+              <h3 class="text-sm font-extrabold text-slate-600 tracking-tight">${t.name}</h3>
+              <p class="text-[11px] font-medium text-slate-400">${t.subtitle}</p>
+            </div>
+            <div class="flex items-center space-x-1.5 py-1">
+              ${barsHTML}
+            </div>
+            <div class="flex items-center justify-between pt-1">
+              <button disabled class="px-3.5 py-1.5 rounded-full bg-slate-100 border border-slate-200 text-slate-400 font-extrabold text-[11px] inline-flex items-center space-x-1 cursor-not-allowed">
+                <span class="material-symbols-rounded text-[14px]">lock</span>
+                <span>Kilidlidir</span>
+              </button>
+              <span class="text-[10px] font-semibold text-slate-400">Əvvəlki dərsi keçin</span>
+            </div>
+          `;
+                } else {
+                    card.className = "cursor-pointer relative p-4 rounded-[26px] bg-white border border-slate-200/90 shadow-sm shadow-slate-100 hover:border-brand/50 transition active:scale-[0.99] space-y-2.5";
+                    card.onclick = () => openTopicModal(t.name);
+                    card.innerHTML = `
+            <div class="absolute right-4 top-4 w-9 h-9 rounded-2xl bg-brandLight border border-indigo-100 flex items-center justify-center text-brand">
+              <span class="material-symbols-rounded text-[18px]">${t.icon}</span>
+            </div>
+            <div class="space-y-0.5">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-muted">Mövzu Sınağı</span>
+              <h3 class="text-sm font-extrabold text-ink tracking-tight">${t.name}</h3>
+              <p class="text-[11px] font-medium text-muted">${t.subtitle}</p>
+            </div>
+            <div class="flex items-center space-x-1.5 py-1">
+              ${barsHTML}
+            </div>
+            <div class="flex items-center justify-between pt-1">
+              <span class="px-3.5 py-1.5 rounded-full bg-accentYellow text-ink font-extrabold text-[11px] border border-amber-300 shadow-2xs inline-flex items-center space-x-1">
+                <span>Başla</span>
+                <span class="material-symbols-rounded text-[14px]">arrow_forward</span>
+              </span>
+              <span class="text-[10px] font-bold text-muted">Səviyyə: ${t.progressBars}/5</span>
+            </div>
+          `;
+                }
+                container.appendChild(card);
+            });
+        }
+
+        function setFilter(filter) {
+            currentFilter = filter;
+            ['all', 'unlocked', 'completed', 'uncompleted'].forEach(f => {
+                const btn = document.getElementById(`filter-${f}`);
+                if (f === filter) {
+                    btn.className = "px-4 py-1.5 rounded-full bg-brand text-white text-xs font-extrabold flex-shrink-0 transition shadow-xs";
+                } else {
+                    btn.className = "px-4 py-1.5 rounded-full bg-white border border-slate-200 text-muted text-xs font-extrabold flex-shrink-0 transition";
+                }
+            });
+            filterTests();
+        }
+
+        function filterTests() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            let result = topics.filter(t => t.name.toLowerCase().includes(query));
+
+            if (currentFilter === 'unlocked') {
+                result = result.filter(t => t.status !== 'locked');
+            } else if (currentFilter === 'completed') {
+                result = result.filter(t => t.status === 'completed');
+            } else if (currentFilter === 'uncompleted') {
+                result = result.filter(t => t.status === 'uncompleted');
+            }
+
+            renderTopics(result);
+        }
+
+        function openTopicModal(topicName) {
+            document.getElementById('modalTopicTitle').innerText = topicName;
+            document.getElementById('topicModal').classList.remove('hidden');
+        }
+
+        function closeTopicModal() {
+            document.getElementById('topicModal').classList.add('hidden');
+        }
+
+        function openPreviousTests() {
+            alert('Öncəki sınaqların arxiv paneli açılır...');
+            closeTopicModal();
+        }
+
+        function toggleDrawer(open) {
+            const drawer = document.getElementById('sideDrawer');
+            const backdrop = document.getElementById('drawerBackdrop');
+            if (open) {
+                drawer.classList.remove('-translate-x-full');
+                backdrop.classList.remove('opacity-0', 'invisible');
+                backdrop.classList.add('opacity-100', 'visible');
+                document.body.style.overflow = 'hidden';
+            } else {
+                drawer.classList.add('-translate-x-full');
+                backdrop.classList.remove('opacity-100', 'visible');
+                backdrop.classList.add('opacity-0', 'invisible');
+                document.body.style.overflow = '';
+            }
+        }
+
+        function openInboxModal() { document.getElementById('inboxModal').classList.remove('hidden'); }
+        function closeInboxModal() { document.getElementById('inboxModal').classList.add('hidden'); }
+
+        window.onload = () => { renderTopics(topics); };
+    </script>
+
+</body>
+
+</html>
