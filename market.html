@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="az">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Məntiq.ON - IQ Market</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: '#6F61EF',
+                        brandDark: '#5849E0',
+                        brandLight: '#EEECFC',
+                        accentYellow: '#FCD53F',
+                        ink: '#1E2235',
+                        muted: '#7E849B',
+                        surface: '#F8F9FC'
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #FFFFFF;
+            color: #1E2235;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .material-symbols-rounded {
+            font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+            user-select: none;
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        #drawerBackdrop {
+            transition: opacity 0.28s ease, visibility 0.28s ease;
+        }
+
+        #sideDrawer {
+            transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex flex-col pb-24 max-w-md mx-auto relative bg-surface border-x border-slate-100">
+
+    <!-- ==================== 1. STABİL HEADER ==================== -->
+    <header class="px-5 pt-4 pb-2 flex items-center justify-between bg-white border-b border-slate-100">
+        <div class="flex items-center space-x-3">
+            <button onclick="toggleDrawer(true)"
+                class="w-10 h-10 rounded-2xl bg-surface border border-slate-200/80 hover:bg-slate-100 flex items-center justify-center text-ink active:scale-95 transition focus:outline-none">
+                <span class="material-symbols-rounded text-[22px]">menu</span>
+            </button>
+
+            <div>
+                <div class="flex items-center space-x-1.5">
+                    <span class="text-[11px] font-bold text-ink">Bürünc 1</span>
+                    <span class="text-[10px] font-semibold text-muted">· 62%</span>
+                </div>
+                <div class="w-24 h-2 bg-slate-100 rounded-full overflow-hidden mt-1 border border-slate-200/60">
+                    <div class="bg-brand h-full rounded-full" style="width: 62%"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex items-center space-x-2">
+            <a href="market.html"
+                class="flex items-center space-x-1 bg-amber-50/90 border border-amber-200/80 px-3 py-1.5 rounded-full active:scale-95 transition">
+                <span class="material-symbols-rounded text-amber-500 text-[16px]">bolt</span>
+                <span class="text-xs font-extrabold text-amber-900">323 XP</span>
+            </a>
+
+            <button onclick="openInboxModal()"
+                class="w-10 h-10 rounded-2xl bg-surface border border-slate-200/80 hover:bg-slate-100 flex items-center justify-center text-ink relative active:scale-95 transition">
+                <span class="material-symbols-rounded text-[20px]">notifications</span>
+                <span class="absolute top-2.5 right-2.5 w-2 h-2 bg-rose-500 rounded-full ring-2 ring-white"></span>
+            </button>
+        </div>
+    </header>
+
+
+    <!-- ==================== 2. MARKET ÜST BİLGİ KARTI ==================== -->
+    <section class="px-5 pt-4">
+        <div
+            class="p-5 rounded-[28px] bg-white border border-slate-200/90 shadow-sm shadow-slate-100 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-11 h-11 rounded-2xl bg-brandLight text-brand flex items-center justify-center">
+                    <span class="material-symbols-rounded text-[22px]">psychology</span>
+                </div>
+                <div>
+                    <h2 class="text-sm font-black text-ink">Market</h2>
+                    <p class="text-[11px] text-muted leading-tight">Hər düzgün cavab +1 IQ xalı qazandırır. <br>IQ
+                        xallarınızı burada xərcləyə bilərsiniz.</p>
+                </div>
+            </div>
+            <div class="text-right flex-shrink-0">
+                <span class="text-base font-black text-brand block">226</span>
+                <span class="text-[10px] font-bold text-muted uppercase">IQ xalı</span>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ==================== 3. ÇEMPİONLAR LİQASI ÇEMPİONU ÖZƏL KARTI ==================== -->
+    <section class="px-5 pt-4">
+        <div
+            class="p-6 rounded-[28px] bg-white border border-slate-200/90 shadow-sm shadow-slate-100 text-center space-y-4">
+            <div
+                class="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-amber-50 border border-amber-200 text-amber-800 text-xs font-black">
+                <span>🏆</span>
+                <span>ÇEMPİONLAR LİQASI ÇEMPİONU</span>
+            </div>
+
+            <!-- Çempion çərçivə vizualı -->
+            <div
+                class="relative w-36 h-36 mx-auto rounded-3xl bg-gradient-to-tr from-cyan-400 via-indigo-500 to-amber-400 p-1 shadow-lg shadow-indigo-500/20 flex items-center justify-center">
+                <div
+                    class="w-full h-full bg-slate-900 rounded-[22px] flex flex-col items-center justify-center text-white relative overflow-hidden">
+                    <div
+                        class="w-12 h-12 rounded-full bg-brandLight border-2 border-amber-400 flex items-center justify-center font-black text-brand text-sm shadow-md">
+                        FH</div>
+                    <span class="text-[11px] font-extrabold text-amber-300 mt-1">Fərid</span>
+                </div>
+            </div>
+
+            <p class="text-xs text-muted leading-relaxed">
+                Bu effekt satılmır. O, yalnız <strong class="text-ink">həftədə 1 dəfə</strong> keçirilən Çempionlar
+                Liqası turnirinin qalibinə verilir və növbəti həftəyə kimi onda qalır. Növbəti həftənin turnirində
+                məğlub olursa, effekt yeni qalibə keçir.
+            </p>
+        </div>
+    </section>
+
+
+    <!-- ==================== 4. XAL GÜCLƏNDİRİCİLƏRİ (BOOSTERS) ==================== -->
+    <section class="px-5 pt-5 space-y-3.5">
+        <div class="space-y-0.5">
+            <h3 class="text-sm font-extrabold text-ink">Xal gücləndiriciləri</h3>
+            <p class="text-[11px] text-muted">Alınan gücləndirici Profil — İventara düşür; "Aktiv et" basdıqda müddət
+                başlayır. Gündəlik limit: 0/3.</p>
+        </div>
+
+        <div class="space-y-3">
+            <!-- x2 -->
+            <div class="p-4 rounded-[26px] bg-white border border-slate-200/90 shadow-2xs text-center space-y-2">
+                <div>
+                    <h4 class="text-xl font-black text-brand">x2</h4>
+                    <span class="text-[11px] font-bold text-muted">10 dəqiqə · Qalıq: 3 ədəd</span>
+                </div>
+                <button onclick="buyItem('x2 Gücləndirici', 20)"
+                    class="w-full py-3 rounded-2xl bg-gradient-to-r from-cyan-400 to-blue-500 text-white font-extrabold text-xs shadow-md shadow-blue-500/20 active:scale-[0.99] transition">
+                    20 IQ
+                </button>
+            </div>
+
+            <!-- x3 -->
+            <div class="p-4 rounded-[26px] bg-white border border-slate-200/90 shadow-2xs text-center space-y-2">
+                <div>
+                    <h4 class="text-xl font-black text-brand">x3</h4>
+                    <span class="text-[11px] font-bold text-muted">8 dəqiqə · Qalıq: 5 ədəd</span>
+                </div>
+                <button onclick="buyItem('x3 Gücləndirici', 40)"
+                    class="w-full py-3 rounded-2xl bg-gradient-to-r from-cyan-400 to-blue-500 text-white font-extrabold text-xs shadow-md shadow-blue-500/20 active:scale-[0.99] transition">
+                    40 IQ
+                </button>
+            </div>
+
+            <!-- x5 -->
+            <div class="p-4 rounded-[26px] bg-white border border-slate-200/90 shadow-2xs text-center space-y-2">
+                <div>
+                    <h4 class="text-xl font-black text-brand">x5</h4>
+                    <span class="text-[11px] font-bold text-muted">6 dəqiqə · Qalıq: 4 ədəd</span>
+                </div>
+                <button onclick="buyItem('x5 Gücləndirici', 60)"
+                    class="W-full py-3 rounded-2xl bg-gradient-to-r from-cyan-400 to-blue-500 text-white font-extrabold text-xs shadow-md shadow-blue-500/20 active:scale-[0.99] transition block w-full">
+                    60 IQ
+                </button>
+            </div>
+
+            <!-- x10 -->
+            <div class="p-4 rounded-[26px] bg-white border border-slate-200/90 shadow-2xs text-center space-y-2">
+                <div>
+                    <h4 class="text-xl font-black text-brand">x10</h4>
+                    <span class="text-[11px] font-bold text-muted">4 dəqiqə · Qalıq: 5 ədəd</span>
+                </div>
+                <button onclick="buyItem('x10 Gücləndirici', 90)"
+                    class="w-full py-3 rounded-2xl bg-gradient-to-r from-cyan-400 to-blue-500 text-white font-extrabold text-xs shadow-md shadow-blue-500/20 active:scale-[0.99] transition">
+                    90 IQ
+                </button>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ==================== 5. PREMİUM 3D ANİMASİYALI AVATARLAR ==================== -->
+    <section class="px-5 pt-6 space-y-3.5">
+        <div class="space-y-0.5">
+            <h3 class="text-sm font-extrabold text-ink flex items-center space-x-1.5">
+                <span class="text-brand">◆</span>
+                <span>Premium 3D animasiyalı avatarlar</span>
+            </h3>
+            <p class="text-[11px] text-muted">Eksklüziv, hərəkətli 3D avatar qabıqları.</p>
+        </div>
+
+        <div class="space-y-3">
+            <!-- Enerji kürəsi (Sizdədir) -->
+            <div class="p-4 rounded-[26px] bg-white border border-slate-200/90 shadow-2xs text-center space-y-2">
+                <div
+                    class="w-16 h-16 rounded-full bg-brandLight mx-auto flex items-center justify-center font-black text-brand">
+                    🌐</div>
+                <div>
+                    <h4 class="text-xs font-extrabold text-ink">Enerji kürəsi</h4>
+                    <span class="text-[11px] font-bold text-muted">500 IQ</span>
+                </div>
+                <span class="text-xs font-black text-emerald-600 block">Sizdədir ✓</span>
+            </div>
+
+            <!-- Holoqram (Sizdədir) -->
+            <div class="p-4 rounded-[26px] bg-white border border-slate-200/90 shadow-2xs text-center space-y-2">
+                <div
+                    class="w-16 h-16 rounded-full bg-cyan-50 mx-auto flex items-center justify-center font-black text-cyan-600">
+                    💫</div>
+                <div>
+                    <h4 class="text-xs font-extrabold text-ink">Holoqram</h4>
+                    <span class="text-[11px] font-bold text-muted">600 IQ</span>
+                </div>
+                <span class="text-xs font-black text-emerald-600 block">Sizdədir ✓</span>
+            </div>
+
+            <!-- Zümrüd Əfsunu -->
+            <div class="p-4 rounded-[26px] bg-white border border-slate-200/90 shadow-2xs text-center space-y-2">
+                <div
+                    class="w-16 h-16 rounded-full bg-emerald-50 mx-auto flex items-center justify-center font-black text-emerald-600">
+                    🍃</div>
+                <div>
+                    <h4 class="text-xs font-extrabold text-ink">Zümrüd Əfsunu</h4>
+                    <span class="text-[11px] font-bold text-muted">700 IQ</span>
+                </div>
+                <button onclick="buyItem('Zümrüd Əfsunu', 700)"
+                    class="w-full py-3 rounded-2xl bg-gradient-to-r from-cyan-400 to-blue-500 text-white font-extrabold text-xs shadow-md shadow-blue-500/20 active:scale-[0.99] transition">
+                    700 IQ
+                </button>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ==================== 6. AVATAR ÇƏRCİVƏLƏRİ ==================== -->
+    <section class="px-5 pt-6 space-y-3.5">
+        <div class="space-y-0.5">
+            <h3 class="text-sm font-extrabold text-ink flex items-center space-x-1.5">
+                <span>✨</span>
+                <span>Avatar çərçivələri</span>
+            </h3>
+        </div>
+
+        <div class="space-y-3">
+            <!-- Alov -->
+            <div class="p-4 rounded-[26px] bg-white border border-slate-200/90 shadow-2xs text-center space-y-2">
+                <div
+                    class="w-14 h-14 rounded-full bg-amber-50 mx-auto flex items-center justify-center text-amber-600 font-bold">
+                    🔥</div>
+                <div>
+                    <h4 class="text-xs font-extrabold text-ink">🔥 Alov</h4>
+                    <span class="text-[11px] font-bold text-muted">250 IQ</span>
+                </div>
+                <span class="text-xs font-black text-emerald-600 block">Sizdədir ✓</span>
+            </div>
+
+            <!-- İldırım -->
+            <div class="p-4 rounded-[26px] bg-white border border-slate-200/90 shadow-2xs text-center space-y-2">
+                <div
+                    class="w-14 h-14 rounded-full bg-blue-50 mx-auto flex items-center justify-center text-blue-600 font-bold">
+                    ⚡</div>
+                <div>
+                    <h4 class="text-xs font-extrabold text-ink">⚡ İldırım</h4>
+                    <span class="text-[11px] font-bold text-muted">250 IQ</span>
+                </div>
+                <span class="text-xs font-black text-emerald-600 block">Sizdədir ✓</span>
+            </div>
+
+            <!-- Qara dəlik -->
+            <div class="p-4 rounded-[26px] bg-white border border-slate-200/90 shadow-2xs text-center space-y-2">
+                <div
+                    class="w-14 h-14 rounded-full bg-slate-100 mx-auto flex items-center justify-center text-slate-700 font-bold">
+                    🕳️</div>
+                <div>
+                    <h4 class="text-xs font-extrabold text-ink">🪐 Qara dəlik</h4>
+                    <span class="text-[11px] font-bold text-muted">300 IQ</span>
+                </div>
+                <span class="text-xs font-black text-emerald-600 block">Sizdədir ✓</span>
+            </div>
+
+            <!-- Neon parıltı -->
+            <div class="p-4 rounded-[26px] bg-white border border-slate-200/90 shadow-2xs text-center space-y-2">
+                <div
+                    class="w-14 h-14 rounded-full bg-purple-50 mx-auto flex items-center justify-center text-purple-600 font-bold">
+                    💡</div>
+                <div>
+                    <h4 class="text-xs font-extrabold text-ink">💡 Neon parıltı</h4>
+                    <span class="text-[11px] font-bold text-muted">210 IQ</span>
+                </div>
+                <span class="text-xs font-black text-emerald-600 block">Sizdədir ✓</span>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ==================== 7. AD EFFEKTLƏRİ ==================== -->
+    <section class="px-5 pt-6 space-y-3.5">
+        <div class="space-y-0.5">
+            <h3 class="text-sm font-extrabold text-ink">Ad effektləri</h3>
+        </div>
+
+        <div class="space-y-3">
+            <!-- Alov Ad -->
+            <div class="p-4 rounded-[26px] bg-white border border-slate-200/90 shadow-2xs text-center space-y-2">
+                <div>
+                    <span class="text-sm font-black text-amber-600 tracking-wide block">Fərid</span>
+                    <h4 class="text-xs font-extrabold text-ink mt-1">🔥 Alov</h4>
+                    <span class="text-[11px] font-bold text-muted">230 IQ</span>
+                </div>
+                <span class="text-xs font-black text-emerald-600 block">Sizdədir ✓</span>
+            </div>
+
+            <!-- İldırım Ad -->
+            <div class="p-4 rounded-[26px] bg-white border border-slate-200/90 shadow-2xs text-center space-y-2">
+                <div>
+                    <span class="text-sm font-black text-cyan-500 tracking-wide block">Fərid</span>
+                    <h4 class="text-xs font-extrabold text-ink mt-1">⚡ İldırım</h4>
+                    <span class="text-[11px] font-bold text-muted">230 IQ</span>
+                </div>
+                <span class="text-xs font-black text-emerald-600 block">Sizdədir ✓</span>
+            </div>
+
+            <!-- Qara dəlik Ad -->
+            <div class="p-4 rounded-[26px] bg-white border border-slate-200/90 shadow-2xs text-center space-y-2">
+                <div>
+                    <span class="text-sm font-black text-purple-600 tracking-wide block">Fərid</span>
+                    <h4 class="text-xs font-extrabold text-ink mt-1">🪐 Qara dəlik</h4>
+                    <span class="text-[11px] font-bold text-muted">280 IQ</span>
+                </div>
+                <span class="text-xs font-black text-emerald-600 block">Sizdədir ✓</span>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ==================== YAN MENYU (DRAWER) ==================== -->
+    <div id="drawerBackdrop" onclick="toggleDrawer(false)"
+        class="fixed inset-0 bg-slate-900/35 backdrop-blur-[2px] z-40 opacity-0 invisible">
+    </div>
+
+    <aside id="sideDrawer"
+        class="fixed top-0 bottom-0 left-0 w-72 bg-white z-50 border-r border-slate-200 shadow-2xl p-5 flex flex-col justify-between -translate-x-full rounded-r-3xl">
+
+        <div class="space-y-3">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                <a href="profil.html" class="flex items-center space-x-2.5">
+                    <div
+                        class="w-9 h-9 rounded-full bg-brandLight border border-indigo-200 text-brand flex items-center justify-center font-extrabold text-xs">
+                        FH
+                    </div>
+                    <div>
+                        <span class="text-sm font-extrabold text-ink block leading-none">Fərid Hümbətov</span>
+                        <span class="text-[11px] font-medium text-muted">Profilə keç →</span>
+                    </div>
+                </a>
+                <button onclick="toggleDrawer(false)"
+                    class="w-7 h-7 rounded-full bg-surface border border-slate-200/80 flex items-center justify-center text-muted hover:text-ink transition">
+                    <span class="material-symbols-rounded text-[16px]">close</span>
+                </button>
+            </div>
+
+            <nav class="space-y-0.5 text-xs font-bold text-ink">
+                <a href="panel.html"
+                    class="flex items-center space-x-2.5 px-3 py-2 rounded-xl hover:bg-surface transition">
+                    <span class="material-symbols-rounded text-[18px] text-muted">dashboard</span><span>Əsas
+                        Panel</span>
+                </a>
+                <a href="sinaqlar.html"
+                    class="flex items-center space-x-2.5 px-3 py-2 rounded-xl hover:bg-surface transition">
+                    <span class="material-symbols-rounded text-[18px] text-muted">quiz</span><span>Sınaqlar
+                        Siyahısı</span>
+                </a>
+                <a href="cempionlar.html"
+                    class="flex items-center space-x-2.5 px-3 py-2 rounded-xl hover:bg-surface transition">
+                    <span class="material-symbols-rounded text-[18px] text-muted">swords</span><span>Çempionlar
+                        Liqası</span>
+                </a>
+                <a href="tedbirler.html"
+                    class="flex items-center space-x-2.5 px-3 py-2 rounded-xl hover:bg-surface transition">
+                    <span class="material-symbols-rounded text-[18px] text-muted">event</span><span>Tədbirlər</span>
+                </a>
+                <a href="reytinq.html"
+                    class="flex items-center space-x-2.5 px-3 py-2 rounded-xl hover:bg-surface transition">
+                    <span class="material-symbols-rounded text-[18px] text-muted">leaderboard</span><span>Reytinq və
+                        Liqalar</span>
+                </a>
+                <a href="qruplar.html"
+                    class="flex items-center space-x-2.5 px-3 py-2 rounded-xl hover:bg-surface transition">
+                    <span class="material-symbols-rounded text-[18px] text-muted">groups</span><span>Qruplar</span>
+                </a>
+                <a href="statistika.html"
+                    class="flex items-center space-x-2.5 px-3 py-2 rounded-xl hover:bg-surface transition">
+                    <span
+                        class="material-symbols-rounded text-[18px] text-muted">query_stats</span><span>Statistikam</span>
+                </a>
+                <a href="market.html"
+                    class="flex items-center space-x-2.5 px-3 py-2 rounded-xl bg-brandLight text-brand">
+                    <span class="material-symbols-rounded text-[18px]">storefront</span><span>IQ Market</span>
+                </a>
+                <a href="movzu.html"
+                    class="flex items-center space-x-2.5 px-3 py-2 rounded-xl hover:bg-surface transition">
+                    <span class="material-symbols-rounded text-[18px] text-muted">menu_book</span><span>Mövzu
+                        İzahı</span>
+                </a>
+                <a href="mesajlar.html"
+                    class="flex items-center space-x-2.5 px-3 py-2 rounded-xl hover:bg-surface transition">
+                    <span class="material-symbols-rounded text-[18px] text-muted">chat</span><span>Mesajlar</span>
+                </a>
+                <a href="elanlar.html"
+                    class="flex items-center space-x-2.5 px-3 py-2 rounded-xl hover:bg-surface transition">
+                    <span class="material-symbols-rounded text-[18px] text-muted">campaign</span><span>Elanlar</span>
+                </a>
+                <a href="ideyalar.html"
+                    class="flex items-center space-x-2.5 px-3 py-2 rounded-xl hover:bg-surface transition">
+                    <span
+                        class="material-symbols-rounded text-[18px] text-muted">tips_and_updates</span><span>İdeyalar</span>
+                </a>
+                <!-- Admin və Müəllim Paneli Keçidləri -->
+                <div class="pt-2 mt-2 border-t border-slate-100 space-y-0.5 text-xs font-bold text-ink">
+                    <a href="muellim.html"
+                        class="flex items-center space-x-2.5 px-3 py-2 rounded-xl hover:bg-surface transition">
+                        <span class="material-symbols-rounded text-[18px] text-brand">school</span>
+                        <span>Müəllim Paneli</span>
+                    </a>
+                    <a href="admin.html"
+                        class="flex items-center space-x-2.5 px-3 py-2 rounded-xl hover:bg-surface transition">
+                        <span class="material-symbols-rounded text-[18px] text-amber-600">admin_panel_settings</span>
+                        <span>Admin Paneli</span>
+                    </a>
+                </div>
+            </nav>
+        </div>
+
+        <div class="pt-2 border-t border-slate-100 text-xs font-bold">
+            <a href="auth.html"
+                class="flex items-center justify-center space-x-1 w-full py-2 rounded-xl text-rose-500 hover:bg-rose-50 transition">
+                <span class="material-symbols-rounded text-[16px]">logout</span>
+                <span>Hesabdan Çıxış</span>
+            </a>
+        </div>
+    </aside>
+
+
+    <!-- ==================== MODAL (BİLDİRİŞLƏR) ==================== -->
+    <div id="inboxModal" onclick="closeInboxModal()"
+        class="fixed inset-0 bg-slate-900/35 backdrop-blur-[2px] z-50 hidden flex items-center justify-center p-5">
+        <div onclick="event.stopPropagation()"
+            class="bg-white rounded-3xl border border-slate-200 max-w-xs w-full p-5 space-y-3 shadow-xl">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-2.5">
+                <h3 class="text-sm font-extrabold text-ink">Bildirişlər</h3>
+                <button onclick="closeInboxModal()"
+                    class="w-7 h-7 rounded-full bg-surface text-xs font-bold text-muted">✕</button>
+            </div>
+            <div class="space-y-2 text-xs">
+                <div class="p-3 rounded-2xl bg-amber-50/80 border border-amber-200/60 text-ink">
+                    <span class="font-extrabold block">⚡ Yeni Məhsullar Marketdə!</span>
+                    <span class="text-muted">3D avatarlar və xal gücləndiriciləri əlavə olundu.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ==================== JAVASCRIPT ==================== -->
+    <script>
+        function toggleDrawer(open) {
+            const drawer = document.getElementById('sideDrawer');
+            const backdrop = document.getElementById('drawerBackdrop');
+            if (open) {
+                drawer.classList.remove('-translate-x-full');
+                backdrop.classList.remove('opacity-0', 'invisible');
+                backdrop.classList.add('opacity-100', 'visible');
+                document.body.style.overflow = 'hidden';
+            } else {
+                drawer.classList.add('-translate-x-full');
+                backdrop.classList.remove('opacity-100', 'visible');
+                backdrop.classList.add('opacity-0', 'invisible');
+                document.body.style.overflow = '';
+            }
+        }
+
+        function openInboxModal() { document.getElementById('inboxModal').classList.add('hidden') ? null : document.getElementById('inboxModal').classList.remove('hidden'); }
+        function closeInboxModal() { document.getElementById('inboxModal').classList.add('hidden'); }
+        function openInboxModal() { document.getElementById('inboxModal').classList.remove('hidden'); }
+
+        function buyItem(itemName, price) {
+            alert(`"${itemName}" məhsulu uğurla alındı! Balansınızdan ${price} IQ çıxıldı.`);
+        }
+    </script>
+
+</body>
+
+</html>

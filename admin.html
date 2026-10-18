@@ -2,373 +2,549 @@
 <html lang="az">
 
 <head>
-    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Məntiq.ON - Admin Paneli</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        brand: 'var(--color-brand)',
-                        brandSecondary: 'var(--color-brand-secondary)',
-                        brandLight: 'var(--color-brand-light)',
-                        bgPlatinum: 'var(--color-bg-platinum)',
-                        accentOrange: 'var(--color-accent-orange)',
-                        statusGreen: 'var(--color-status-green)',
-                        statusRed: 'var(--color-status-red)'
+                        brand: '#6F61EF',
+                        brandDark: '#5849E0',
+                        brandLight: '#EEECFC',
+                        accentYellow: '#FCD53F',
+                        ink: '#1E2235',
+                        muted: '#7E849B',
+                        surface: '#F8F9FC'
                     }
                 }
             }
         }
     </script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #FFFFFF;
+            color: #1E2235;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .material-symbols-rounded {
+            font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+            user-select: none;
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
 </head>
 
-<body class="text-slate-800 antialiased min-h-screen flex flex-col pb-20 lg:pb-8">
+<body class="min-h-screen flex flex-col pb-20 max-w-md mx-auto relative bg-surface border-x border-slate-100">
 
-    <!-- ==================== 1. ADMIN HEADER ==================== -->
-    <header class="bg-brand text-white sticky top-0 z-40 shadow-sm">
-        <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-
-            <!-- Sol: Geri qayıt və Başlıq -->
-            <div class="flex items-center space-x-3">
-                <a href="panel.html"
-                    class="w-9 h-9 flex items-center justify-center rounded-xl bg-white/10 hover:bg-white/15 text-white active:scale-95 transition">
-                    <svg class="w-5 h-5 stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
-                    </svg>
-                </a>
-                <div>
-                    <div class="flex items-center space-x-1.5">
-                        <span class="text-lg font-extrabold tracking-tight">Məntiq<span
-                                class="text-accentOrange">.ON</span></span>
-                        <span
-                            class="text-[10px] font-bold bg-accentOrange/90 text-white px-2 py-0.5 rounded-md uppercase">Admin</span>
-                    </div>
-                    <span class="text-[11px] text-brandLight hidden sm:block">Mərkəzi İdarəetmə Paneli</span>
+    <!-- ==================== HEADER ==================== -->
+    <header
+        class="px-5 pt-4 pb-3 flex items-center justify-between bg-white border-b border-slate-100 sticky top-0 z-30 shadow-2xs">
+        <div class="flex items-center space-x-3">
+            <a href="panel.html"
+                class="w-10 h-10 rounded-2xl bg-surface border border-slate-200/80 hover:bg-slate-100 flex items-center justify-center text-ink active:scale-95 transition">
+                <span class="material-symbols-rounded text-[20px]">arrow_back</span>
+            </a>
+            <div>
+                <div class="flex items-center space-x-1.5">
+                    <span class="text-xs font-black text-ink">Fərid M.</span>
+                    <span
+                        class="text-[9px] font-extrabold bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full">Platforma
+                        Admini</span>
                 </div>
+                <span id="currentAdminTitle"
+                    class="text-[11px] font-extrabold text-brand block leading-tight">İcmal</span>
             </div>
-
-            <!-- Sağ: Tez Əməliyyatlar və Profil -->
-            <div class="flex items-center space-x-2.5">
-                <a href="muellim.html"
-                    class="hidden sm:flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/15 text-xs font-semibold text-white transition">
-                    <span>🎓 Müəllim Rejimi</span>
-                </a>
-                <div
-                    class="w-9 h-9 rounded-xl bg-accentOrange text-white flex items-center justify-center font-bold text-xs ring-2 ring-white/20">
-                    A
-                </div>
-            </div>
-
         </div>
+
+        <!-- Admin Bölmələr Menyu Düyməsi -->
+        <button onclick="toggleAdminMenu()"
+            class="flex items-center space-x-1.5 px-3 py-2 rounded-2xl bg-brand text-white font-extrabold text-xs shadow-md shadow-brand/20 active:scale-95 transition">
+            <span class="material-symbols-rounded text-[18px]">admin_panel_settings</span>
+            <span>Bölmələr</span>
+        </button>
     </header>
 
-    <!-- ==================== 2. ƏSAS MƏZMUN ==================== -->
-    <div class="max-w-6xl w-full mx-auto p-4 sm:p-6 space-y-5 flex-1">
 
-        <!-- Əsas Statistik Kartlar -->
-        <section class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
-            <div class="bg-white p-4 rounded-3xl border border-slate-200/80 shadow-sm space-y-1">
-                <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Toplam İstifadəçi</span>
-                <div class="text-xl sm:text-2xl font-extrabold text-brand">1,420</div>
-                <span class="text-[10px] font-bold text-statusGreen flex items-center gap-0.5">
-                    <span>↑</span> 38 yeni tələbə bu gün
-                </span>
+    <!-- ==================== ADMIN PANELLƏRİ ==================== -->
+    <main class="flex-1 px-5 pt-4 space-y-4">
+
+        <!-- 1. İCMAL -->
+        <div id="panel-icmal" class="admin-panel space-y-4">
+            <div class="grid grid-cols-2 gap-3">
+                <div class="p-4 rounded-[26px] bg-white border border-slate-200/90 shadow-2xs space-y-1">
+                    <div class="w-8 h-8 rounded-xl bg-brandLight text-brand flex items-center justify-center"><span
+                            class="material-symbols-rounded text-[18px]">groups</span></div>
+                    <span class="text-[10px] font-bold text-muted block uppercase">Ümumi Tələbələr</span>
+                    <h3 class="text-xl font-black text-ink">178</h3>
+                </div>
+                <div class="p-4 rounded-[26px] bg-white border border-slate-200/90 shadow-2xs space-y-1">
+                    <div class="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center"><span
+                            class="material-symbols-rounded text-[18px]">assignment</span></div>
+                    <span class="text-[10px] font-bold text-muted block uppercase">Sınaqlar</span>
+                    <h3 class="text-xl font-black text-ink">6</h3>
+                </div>
+                <div class="p-4 rounded-[26px] bg-white border border-slate-200/90 shadow-2xs space-y-1">
+                    <div class="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                        <span class="material-symbols-rounded text-[18px]">bolt</span></div>
+                    <span class="text-[10px] font-bold text-muted block uppercase">Ümumi Cəhdlər</span>
+                    <h3 class="text-xl font-black text-ink">186</h3>
+                </div>
+                <div class="p-4 rounded-[26px] bg-white border border-slate-200/90 shadow-2xs space-y-1">
+                    <div class="w-8 h-8 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center"><span
+                            class="material-symbols-rounded text-[18px]">pending_actions</span></div>
+                    <span class="text-[10px] font-bold text-muted block uppercase">Gözləyən Sorğu</span>
+                    <h3 class="text-xl font-black text-ink">4 ədəd</h3>
+                </div>
             </div>
 
-            <div class="bg-white p-4 rounded-3xl border border-slate-200/80 shadow-sm space-y-1">
-                <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Aktiv Sınaqlar</span>
-                <div class="text-xl sm:text-2xl font-extrabold text-slate-800">18</div>
-                <span class="text-[10px] text-slate-400">4 sınaq redaktədə</span>
-            </div>
-
-            <div class="bg-white p-4 rounded-3xl border border-slate-200/80 shadow-sm space-y-1">
-                <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Online Arenada</span>
-                <div class="text-xl sm:text-2xl font-extrabold text-accentOrange">24</div>
-                <span class="text-[10px] font-bold text-statusGreen">6 canlı matç gedir</span>
-            </div>
-
-            <div class="bg-white p-4 rounded-3xl border border-slate-200/80 shadow-sm space-y-1">
-                <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Gözləyən Şəkillər</span>
-                <div class="text-xl sm:text-2xl font-extrabold text-statusRed">7</div>
-                <span class="text-[10px] text-statusRed font-semibold">Təsdiq gözləyir</span>
-            </div>
-        </section>
-
-        <!-- Admin Bölmə Keçidləri (Tab Zolağı) -->
-        <div class="flex items-center space-x-2 overflow-x-auto pb-1 no-scrollbar">
-            <button onclick="switchAdminTab('users')" id="tabBtn-users"
-                class="admin-tab-btn active px-4 py-2 rounded-2xl text-xs font-bold whitespace-nowrap transition bg-slate-100 text-slate-600">
-                👥 İstifadəçilər
-            </button>
-            <button onclick="switchAdminTab('tests')" id="tabBtn-tests"
-                class="admin-tab-btn px-4 py-2 rounded-2xl text-xs font-bold whitespace-nowrap transition bg-slate-100 text-slate-600">
-                📝 Sınaq və Sual Bankı
-            </button>
-            <button onclick="switchAdminTab('avatars')" id="tabBtn-avatars"
-                class="admin-tab-btn px-4 py-2 rounded-2xl text-xs font-bold whitespace-nowrap transition bg-slate-100 text-slate-600">
-                🖼️ Avatar Təsdiqi (7)
-            </button>
-            <button onclick="switchAdminTab('tournaments')" id="tabBtn-tournaments"
-                class="admin-tab-btn px-4 py-2 rounded-2xl text-xs font-bold whitespace-nowrap transition bg-slate-100 text-slate-600">
-                🏆 Turnirlər və ÇL
-            </button>
-            <button onclick="switchAdminTab('announcements')" id="tabBtn-announcements"
-                class="admin-tab-btn px-4 py-2 rounded-2xl text-xs font-bold whitespace-nowrap transition bg-slate-100 text-slate-600">
-                📢 Elan və Bildiriş
-            </button>
-        </div>
-
-        <!-- TAB 1: İSTİFADƏÇİLƏRİN İDARƏ EDİLMƏSİ -->
-        <div id="tabContent-users" class="space-y-4">
-            <div class="bg-white rounded-3xl p-4 sm:p-5 border border-slate-200/80 shadow-sm space-y-4">
-
-                <!-- Axtarış və Filtr zolağı -->
-                <div class="flex flex-col sm:flex-row gap-2.5 items-stretch sm:items-center justify-between">
-                    <div class="relative flex-1">
+            <div class="p-5 rounded-[28px] bg-white border border-slate-200/90 shadow-2xs space-y-3">
+                <h4 class="text-xs font-extrabold text-ink">Sistem Logları və Fəaliyyətlər</h4>
+                <div class="space-y-2.5 text-xs">
+                    <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+                        <div><span class="font-extrabold text-ink block">Əli İsmayıllı</span><span
+                                class="text-[10px] text-muted">Profil şəkil təsdiqi gözləyir</span></div>
                         <span
-                            class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                            </svg>
-                        </span>
-                        <input type="text" placeholder="Ad, nömrə və ya e-poçt ilə axtar..."
-                            class="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:border-brandSecondary transition">
+                            class="text-[10px] font-bold bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full">Gözləyir</span>
                     </div>
-                    <div class="flex items-center space-x-2">
-                        <select
-                            class="px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-700 focus:outline-none">
-                            <option>Bütün Rollar</option>
-                            <option>Tələbə</option>
-                            <option>Müəllim</option>
-                            <option>Admin</option>
-                        </select>
-                        <select
-                            class="px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-700 focus:outline-none">
-                            <option>Bütün Statuslar</option>
-                            <option>Aktiv</option>
-                            <option>Bloklanmış</option>
-                        </select>
+                    <div class="flex items-center justify-between">
+                        <div><span class="font-extrabold text-ink block">Fərid Hümbətov</span><span
+                                class="text-[10px] text-muted">Məlumat dəyişikliyi istəyi</span></div>
+                        <span
+                            class="text-[10px] font-bold bg-brandLight text-brand px-2 py-0.5 rounded-full">Yeni</span>
                     </div>
                 </div>
-
-                <!-- İstifadəçilər Cədvəli -->
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-xs border-collapse">
-                        <thead>
-                            <tr class="border-b border-slate-100 text-slate-400 font-bold uppercase text-[10px]">
-                                <th class="py-2.5 px-3">İstifadəçi</th>
-                                <th class="py-2.5 px-3">Əlaqə</th>
-                                <th class="py-2.5 px-3">Xal / IQ</th>
-                                <th class="py-2.5 px-3">Rol</th>
-                                <th class="py-2.5 px-3 text-right">Əməliyyat</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-slate-100 text-slate-700">
-                            <tr class="hover:bg-slate-50/70 transition">
-                                <td class="py-3 px-3">
-                                    <div class="flex items-center space-x-2.5">
-                                        <div
-                                            class="w-8 h-8 rounded-xl bg-brandSecondary text-white flex items-center justify-center font-bold text-xs">
-                                            F</div>
-                                        <div>
-                                            <span class="font-bold text-slate-800 block">Fərid Hümbətov</span>
-                                            <span class="text-[10px] text-slate-400">Qoşulub: 12.09.2026</span>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="py-3 px-3">
-                                    <div>+994 50 123 45 67</div>
-                                    <div class="text-[10px] text-slate-400">farid@gmail.com</div>
-                                </td>
-                                <td class="py-3 px-3">
-                                    <div class="font-bold text-brand">498 xal</div>
-                                    <div class="text-[10px] text-accentOrange font-semibold">228 IQ</div>
-                                </td>
-                                <td class="py-3 px-3">
-                                    <span
-                                        class="px-2 py-0.5 rounded-md bg-emerald-50 text-statusGreen font-bold text-[10px]">Tələbə</span>
-                                </td>
-                                <td class="py-3 px-3 text-right">
-                                    <div class="flex items-center justify-end space-x-1.5">
-                                        <button
-                                            class="px-2.5 py-1 bg-slate-100 hover:bg-brand hover:text-white rounded-lg font-semibold text-[11px] transition">Redaktə</button>
-                                        <button
-                                            class="px-2.5 py-1 bg-red-50 text-statusRed hover:bg-statusRed hover:text-white rounded-lg font-semibold text-[11px] transition">Blokla</button>
-                                    </div>
-                                </td>
-                            </tr>
-
-                            <tr class="hover:bg-slate-50/70 transition">
-                                <td class="py-3 px-3">
-                                    <div class="flex items-center space-x-2.5">
-                                        <div
-                                            class="w-8 h-8 rounded-xl bg-accentOrange text-white flex items-center justify-center font-bold text-xs">
-                                            O</div>
-                                        <div>
-                                            <span class="font-bold text-slate-800 block">Osman Ömərov</span>
-                                            <span class="text-[10px] text-slate-400">Qoşulub: 04.10.2026</span>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="py-3 px-3">
-                                    <div>+994 77 987 65 43</div>
-                                    <div class="text-[10px] text-slate-400">osman@mail.ru</div>
-                                </td>
-                                <td class="py-3 px-3">
-                                    <div class="font-bold text-brand">278 xal</div>
-                                    <div class="text-[10px] text-accentOrange font-semibold">410 IQ</div>
-                                </td>
-                                <td class="py-3 px-3">
-                                    <span
-                                        class="px-2 py-0.5 rounded-md bg-emerald-50 text-statusGreen font-bold text-[10px]">Tələbə</span>
-                                </td>
-                                <td class="py-3 px-3 text-right">
-                                    <div class="flex items-center justify-end space-x-1.5">
-                                        <button
-                                            class="px-2.5 py-1 bg-slate-100 hover:bg-brand hover:text-white rounded-lg font-semibold text-[11px] transition">Redaktə</button>
-                                        <button
-                                            class="px-2.5 py-1 bg-red-50 text-statusRed hover:bg-statusRed hover:text-white rounded-lg font-semibold text-[11px] transition">Blokla</button>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
             </div>
         </div>
 
-        <!-- TAB 2: SINAQ VƏ SUAL BANKI (Gizli) -->
-        <div id="tabContent-tests" class="space-y-4 hidden">
-            <div class="bg-white rounded-3xl p-4 sm:p-5 border border-slate-200/80 shadow-sm space-y-4">
+        <!-- YENİ 1: ŞƏKİL TƏSDİQİ -->
+        <div id="panel-sekilTesiqi" class="admin-panel space-y-4 hidden">
+            <div class="p-5 rounded-[28px] bg-white border border-slate-200/90 shadow-2xs space-y-3 text-xs">
+                <h3 class="text-xs font-black text-ink flex items-center space-x-1.5">
+                    <span class="material-symbols-rounded text-brand text-[18px]">verified</span>
+                    <span>Profil Şəkil Təsdiqi (Gözləyənlər)</span>
+                </h3>
+                <p class="text-[10px] text-muted">İstifadəçilərin profilə yüklədiyi şəkillər admin tərəfindən
+                    təsdiqlənmədən aktivləşmir.</p>
+
+                <div class="p-3.5 rounded-2xl bg-surface border border-slate-200 space-y-3">
+                    <div class="flex items-center space-x-3">
+                        <div
+                            class="w-12 h-12 rounded-2xl bg-brandLight text-brand font-black flex items-center justify-center text-sm">
+                            Əİ</div>
+                        <div>
+                            <span class="font-black text-ink block">Əli İsmayıllı</span>
+                            <span class="text-[10px] text-muted">Yüklənmə tarixi: 10 dəq əvvəl</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-2 pt-1">
+                        <button onclick="alert('Şəkil təsdiqləndi və istifadəçiyə tətbiq olundu!')"
+                            class="flex-1 py-2 rounded-xl bg-emerald-600 text-white font-extrabold active:scale-95 transition">Təsdiq
+                            Et</button>
+                        <button onclick="alert('Şəkil rədd edildi!')"
+                            class="flex-1 py-2 rounded-xl bg-rose-500 text-white font-extrabold active:scale-95 transition">Rədd
+                            Et</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- YENİ 2: WHATSAPP QRUPLARI (Şəkildəki dizayna uyğun) -->
+        <div id="panel-whatsappQruplari" class="admin-panel space-y-4 hidden">
+            <div class="p-5 rounded-[28px] bg-white border border-slate-200/90 shadow-2xs space-y-3 text-xs font-bold">
                 <div class="flex items-center justify-between">
-                    <h3 class="text-sm font-bold text-slate-800">Sınaqların İdarəsi və Yeni Sınaq</h3>
-                    <button
-                        class="px-3.5 py-2 bg-brand hover:bg-brand/90 text-white rounded-xl text-xs font-bold transition shadow-sm">
-                        + Yeni Sınaq Yarat
-                    </button>
+                    <h3 class="text-xs font-black text-ink">WhatsApp qrupları (idarəetmə)</h3>
+                    <span class="text-[10px] font-bold text-muted">12 qrup</span>
                 </div>
 
-                <div class="space-y-3">
-                    <div
-                        class="p-3.5 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-between text-xs">
-                        <div>
-                            <span class="font-bold text-slate-800 block">Qarışıq Ümumi Sınaq #14</span>
-                            <span class="text-[10px] text-slate-400">50 sual · Limit: 90 dəq · Aktiv</span>
-                        </div>
-                        <div class="flex items-center space-x-2">
-                            <button
-                                class="px-2.5 py-1 bg-white border border-slate-200 rounded-lg font-semibold hover:border-brand transition">Suallara
-                                Bax</button>
-                            <button class="px-2.5 py-1 bg-orange-50 text-accentOrange rounded-lg font-bold">Düzəliş
-                                et</button>
+                <div class="flex space-x-2">
+                    <input type="text" placeholder="WhatsApp qrup adı"
+                        class="flex-1 p-2.5 rounded-2xl bg-surface border border-slate-200 text-ink outline-none text-xs">
+                    <button onclick="alert('Yeni WhatsApp qrupu əlavə olundu!')"
+                        class="px-4 py-2.5 rounded-2xl bg-brand text-white font-extrabold shadow-sm active:scale-95 transition text-xs">Qrup
+                        əlavə et</button>
+                </div>
+
+                <div class="space-y-2 pt-1 max-h-[300px] overflow-y-auto no-scrollbar">
+                    <div class="p-3.5 rounded-2xl bg-surface border border-slate-200 flex items-center justify-between">
+                        <div><span class="font-black text-ink block">Aslanlar</span><span
+                                class="text-[10px] text-muted">18 nəfər · ortalama 106 xal</span></div>
+                        <button onclick="confirm('Qrupu silmək istədiyinizdən əminsiniz?') && alert('Silindi')"
+                            class="w-8 h-8 rounded-xl bg-rose-50 text-rose-500 flex items-center justify-center"><span
+                                class="material-symbols-rounded text-[18px]">delete</span></button>
+                    </div>
+                    <div class="p-3.5 rounded-2xl bg-surface border border-slate-200 flex items-center justify-between">
+                        <div><span class="font-black text-ink block">Kosmos</span><span
+                                class="text-[10px] text-muted">13 nəfər · ortalama 199 xal</span></div>
+                        <button onclick="alert('Silindi')"
+                            class="w-8 h-8 rounded-xl bg-rose-50 text-rose-500 flex items-center justify-center"><span
+                                class="material-symbols-rounded text-[18px]">delete</span></button>
+                    </div>
+                    <div class="p-3.5 rounded-2xl bg-surface border border-slate-200 flex items-center justify-between">
+                        <div><span class="font-black text-ink block">Liderlər</span><span
+                                class="text-[10px] text-muted">7 nəfər · ortalama 7 xal</span></div>
+                        <button onclick="alert('Silindi')"
+                            class="w-8 h-8 rounded-xl bg-rose-50 text-rose-500 flex items-center justify-center"><span
+                                class="material-symbols-rounded text-[18px]">delete</span></button>
+                    </div>
+                    <div class="p-3.5 rounded-2xl bg-surface border border-slate-200 flex items-center justify-between">
+                        <div><span class="font-black text-ink block">Nova</span><span class="text-[10px] text-muted">19
+                                nəfər · ortalama 162 xal</span></div>
+                        <button onclick="alert('Silindi')"
+                            class="w-8 h-8 rounded-xl bg-rose-50 text-rose-500 flex items-center justify-center"><span
+                                class="material-symbols-rounded text-[18px]">delete</span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- YENİ 3: MƏLUMAT SORĞULARI -->
+        <div id="panel-melumatSorgulari" class="admin-panel space-y-4 hidden">
+            <div class="p-5 rounded-[28px] bg-white border border-slate-200/90 shadow-2xs space-y-3 text-xs">
+                <h3 class="text-xs font-black text-ink">İstifadəçi Məlumat Dəyişikliyi Sorğuları</h3>
+                <p class="text-[10px] text-muted">İstifadəçilər ad, soyad və ya universitet məlumatlarını səhv yazdıqda
+                    düzəliş üçün buraya sorğu göndərirlər.</p>
+
+                <div class="p-3.5 rounded-2xl bg-surface border border-slate-200 space-y-2">
+                    <div class="flex items-center justify-between">
+                        <span class="font-black text-ink">Fərid Hümbətov</span>
+                        <span class="text-[10px] text-brand bg-brandLight px-2 py-0.5 rounded-full font-bold">Sorğu
+                            #42</span>
+                    </div>
+                    <p class="text-[11px] text-muted font-medium">Köhnə: BMU · Yeni: AzTU (Universitet düzəlişi)</p>
+                    <div class="flex space-x-2 pt-1">
+                        <button onclick="alert('Sorğu təsdiqləndi!')"
+                            class="flex-1 py-1.5 rounded-xl bg-emerald-600 text-white font-bold">Təsdiq Et</button>
+                        <button onclick="alert('Sorğu rədd edildi')"
+                            class="flex-1 py-1.5 rounded-xl bg-rose-500 text-white font-bold">Rədd Et</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- YENİ 4: XAL BONUSU VƏ MARKET STOK IDARƏETMƏSİ -->
+        <div id="panel-xalBonusu" class="admin-panel space-y-4 hidden">
+            <div class="p-5 rounded-[28px] bg-white border border-slate-200/90 shadow-2xs space-y-4 text-xs font-bold">
+                <h3 class="text-xs font-black text-ink">⚡ Xal Bonusu (Multiplikator) Təyini</h3>
+
+                <div class="space-y-2">
+                    <label class="text-[10px] text-muted">Bonus Əmsalı</label>
+                    <select class="w-full p-2.5 rounded-xl bg-surface border border-slate-200 text-ink outline-none">
+                        <option>2X Xal Bonusu</option>
+                        <option>3X Xal Bonusu</option>
+                        <option>5X Xal Bonusu</option>
+                        <option>10X Xal Bonusu</option>
+                    </select>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2">
+                    <div><label class="text-[10px] text-muted block mb-1">Başlama vaxtı</label><input
+                            type="datetime-local"
+                            class="w-full p-2 rounded-xl bg-surface border border-slate-200 text-ink outline-none">
+                    </div>
+                    <div><label class="text-[10px] text-muted block mb-1">Bitmə vaxtı</label><input
+                            type="datetime-local"
+                            class="w-full p-2 rounded-xl bg-surface border border-slate-200 text-ink outline-none">
+                    </div>
+                </div>
+
+                <button onclick="alert('Xal bonusu kampaniyası aktivləşdirildi!')"
+                    class="w-full py-2.5 rounded-2xl bg-brand text-white font-extrabold active:scale-95 transition">Kampaniyanı
+                    Başlat</button>
+
+                <hr class="border-slate-100 my-2">
+
+                <h3 class="text-xs font-black text-ink">🛒 Market Booster Stok İdarəsi</h3>
+                <div class="space-y-2 text-xs">
+                    <div class="p-3 rounded-2xl bg-surface border border-slate-200 flex items-center justify-between">
+                        <span>🛡️ Qoruyucu qalxan (Stok: 14)</span>
+                        <div class="flex items-center space-x-1">
+                            <button onclick="alert('Stok artırıldı')"
+                                class="w-7 h-7 rounded-lg bg-white border border-slate-300 font-black text-brand">+</button>
+                            <button onclick="alert('Stok azaldıldı')"
+                                class="w-7 h-7 rounded-lg bg-white border border-slate-300 font-black text-rose-500">-</button>
                         </div>
                     </div>
-
-                    <div
-                        class="p-3.5 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-between text-xs">
-                        <div>
-                            <span class="font-bold text-slate-800 block">Qeyri-Aşkar Operatorlar Testi</span>
-                            <span class="text-[10px] text-slate-400">20 sual · Limit: 30 dəq · Aktiv</span>
-                        </div>
-                        <div class="flex items-center space-x-2">
-                            <button
-                                class="px-2.5 py-1 bg-white border border-slate-200 rounded-lg font-semibold hover:border-brand transition">Suallara
-                                Bax</button>
-                            <button class="px-2.5 py-1 bg-orange-50 text-accentOrange rounded-lg font-bold">Düzəliş
-                                et</button>
+                    <div class="p-3 rounded-2xl bg-surface border border-slate-200 flex items-center justify-between">
+                        <span>⚡ 2x XP Booster (Stok: 8)</span>
+                        <div class="flex items-center space-x-1">
+                            <button onclick="alert('Stok artırıldı')"
+                                class="w-7 h-7 rounded-lg bg-white border border-slate-300 font-black text-brand">+</button>
+                            <button onclick="alert('Stok azaldıldı')"
+                                class="w-7 h-7 rounded-lg bg-white border border-slate-300 font-black text-rose-500">-</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- TAB 3: AVATAR TƏSDİQLƏRİ (Gizli) -->
-        <div id="tabContent-avatars" class="space-y-4 hidden">
-            <div class="bg-white rounded-3xl p-4 sm:p-5 border border-slate-200/80 shadow-sm space-y-4">
-                <h3 class="text-sm font-bold text-slate-800">Tələbələrin Yüklədiyi Profil Şəkilləri</h3>
+        <!-- 2. MÜƏLLİMDƏ OLAN DİGƏR 16 BÖLMƏ (İdarəetmə Üçün) -->
+        <div id="panel-sualBanki" class="admin-panel space-y-4 hidden">
+            <div class="p-5 rounded-[28px] bg-white border border-slate-200/90 shadow-2xs space-y-3 text-xs font-bold">
+                <h3 class="text-xs font-black text-ink">Sual Bankı İdarəetməsi</h3>
+                <button onclick="alert('Excel/JSON idxal')"
+                    class="w-full py-3 rounded-2xl bg-gradient-to-r from-cyan-400 to-blue-500 text-white">CSV / JSON /
+                    Excel İdxal et</button>
+            </div>
+        </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-                    <div
-                        class="p-3 bg-slate-50 rounded-2xl border border-slate-200/80 flex items-center justify-between">
-                        <div class="flex items-center space-x-3">
-                            <div
-                                class="w-12 h-12 rounded-xl bg-brandLight/30 flex items-center justify-center text-xs font-bold text-brand border border-brandLight">
-                                IMG
-                            </div>
-                            <div>
-                                <span class="font-bold text-xs text-slate-800 block">Elcan Atayev</span>
-                                <span class="text-[10px] text-slate-400">10 dəq əvvəl</span>
-                            </div>
-                        </div>
-                        <div class="flex flex-col space-y-1">
-                            <button
-                                class="px-2.5 py-1 bg-statusGreen text-white rounded-lg text-[10px] font-bold">Təsdiq</button>
-                            <button
-                                class="px-2.5 py-1 bg-red-100 text-statusRed rounded-lg text-[10px] font-bold">Rədd</button>
-                        </div>
-                    </div>
+        <div id="panel-sinaqlarim" class="admin-panel space-y-4 hidden">
+            <div class="p-5 rounded-[28px] bg-white border border-slate-200/90 shadow-2xs space-y-3 text-xs font-bold">
+                <h3 class="text-xs font-black text-ink">Sınaqlar və Qaralamalar</h3>
+                <input type="text" placeholder="Yeni sınaq adı"
+                    class="w-full p-2.5 rounded-xl bg-surface border border-slate-200 text-ink outline-none">
+                <button onclick="alert('Sınaq yaradıldı')" class="w-full py-2.5 rounded-xl bg-brand text-white">Sınaq
+                    Yarat</button>
+            </div>
+        </div>
+
+        <div id="panel-sinaqNeticeleri" class="admin-panel space-y-4 hidden">
+            <div class="p-5 rounded-[28px] bg-white border border-slate-200/90 shadow-2xs space-y-3">
+                <h3 class="text-xs font-black text-ink">Sınaq Nəticələri və Ortalama</h3>
+                <div class="p-3.5 rounded-2xl bg-surface border border-slate-200 text-xs flex justify-between">
+                    <span>Operatorlar Sınağı</span><span class="font-black text-brand">Ortalama: 72%</span>
                 </div>
             </div>
         </div>
 
-        <!-- TAB 4: TURNİRLƏR VƏ ÇEMPİONLAR LİQASI (Gizli) -->
-        <div id="tabContent-tournaments" class="space-y-4 hidden">
-            <div class="bg-white rounded-3xl p-4 sm:p-5 border border-slate-200/80 shadow-sm space-y-4 text-xs">
-                <h3 class="text-sm font-bold text-slate-800">Nokaut və Çempionlar Liqası Parametrləri</h3>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div class="p-3.5 bg-slate-50 rounded-2xl space-y-2 border border-slate-100">
-                        <span class="font-bold text-slate-700 block">1v1 Oyun Müddəti</span>
-                        <input type="text" value="60 saniyə"
-                            class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl">
-                    </div>
-                    <div class="p-3.5 bg-slate-50 rounded-2xl space-y-2 border border-slate-100">
-                        <span class="font-bold text-slate-700 block">Nokaut Turnir İştirakçı Sayı</span>
-                        <select class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl">
-                            <option>16 nəfər</option>
-                            <option selected>32 nəfər</option>
-                            <option>64 nəfər</option>
-                        </select>
-                    </div>
+        <div id="panel-telebeler" class="admin-panel space-y-4 hidden">
+            <div class="p-5 rounded-[28px] bg-white border border-slate-200/90 shadow-2xs space-y-3">
+                <h3 class="text-xs font-black text-ink">Bütün Tələbələr (178)</h3>
+                <div class="p-3 rounded-2xl bg-surface border border-slate-200 text-xs flex justify-between">
+                    <span>Əli İsmayıllı</span><span class="text-emerald-600 font-bold">498 Xal</span>
                 </div>
-                <button class="px-4 py-2 bg-brand text-white font-bold rounded-xl">Yadda Saxla</button>
             </div>
         </div>
 
-        <!-- TAB 5: ELANLAR (Gizli) -->
-        <div id="tabContent-announcements" class="space-y-4 hidden">
-            <div class="bg-white rounded-3xl p-4 sm:p-5 border border-slate-200/80 shadow-sm space-y-3 text-xs">
-                <h3 class="text-sm font-bold text-slate-800">Bütün Tələbələrə Qlobal Elan Göndər</h3>
-                <input type="text" placeholder="Elan başlığı..."
-                    class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl">
-                <textarea rows="3" placeholder="Elanın mətni..."
-                    class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl"></textarea>
-                <button class="px-4 py-2 bg-accentOrange text-white font-bold rounded-xl">Dərhal Yayımla</button>
+        <div id="panel-telebeMelumatlari" class="admin-panel space-y-4 hidden">
+            <div class="p-5 rounded-[28px] bg-white border border-slate-200/90 shadow-2xs space-y-3 text-xs">
+                <h3 class="text-xs font-black text-ink">Tələbə Məlumatları</h3>
+                <div class="p-3 rounded-2xl bg-surface border border-slate-200">BMU · Qrup 417.22</div>
             </div>
         </div>
 
+        <div id="panel-onlineTelebeler" class="admin-panel space-y-4 hidden">
+            <div class="p-5 rounded-[28px] bg-white border border-slate-200/90 shadow-2xs space-y-3 text-xs">
+                <h3 class="text-xs font-black text-ink">Onlayn Tələbələr (2)</h3>
+                <div class="p-3 rounded-2xl bg-emerald-50 text-emerald-900">Əli İsmayıllı · Sınaq icrası</div>
+            </div>
+        </div>
+
+        <div id="panel-canliOyunlar" class="admin-panel space-y-4 hidden">
+            <div class="p-5 rounded-[28px] bg-white border border-slate-200/90 shadow-2xs space-y-3 text-xs">
+                <h3 class="text-xs font-black text-ink">Canlı Oyunlar</h3>
+                <div class="p-3 rounded-2xl bg-surface border border-slate-200">Duel #881 (1v1)</div>
+            </div>
+        </div>
+
+        <div id="panel-universitetler" class="admin-panel space-y-4 hidden">
+            <div class="p-5 rounded-[28px] bg-white border border-slate-200/90 shadow-2xs space-y-3 text-xs">
+                <h3 class="text-xs font-black text-ink">Universitetlər</h3>
+                <details class="p-3 rounded-2xl bg-surface border border-slate-200">
+                    <summary class="font-bold">Bakı Mühəndislik Universiteti</summary>
+                </details>
+            </div>
+        </div>
+
+        <div id="panel-sualXetalari" class="admin-panel space-y-4 hidden">
+            <div class="p-5 rounded-[28px] bg-white border border-slate-200/90 shadow-2xs space-y-3 text-xs">
+                <h3 class="text-xs font-black text-ink">Sual Xətaları</h3>
+                <div class="p-3.5 rounded-2xl bg-amber-50">Sual #1042 şikayəti</div>
+            </div>
+        </div>
+
+        <div id="panel-tedbirler" class="admin-panel space-y-4 hidden">
+            <div class="p-5 rounded-[28px] bg-white border border-slate-200/90 shadow-2xs space-y-3 text-xs font-bold">
+                <h3 class="text-xs font-black text-ink">Tədbir Yarat</h3>
+                <input type="text" placeholder="Başlıq"
+                    class="w-full p-2.5 rounded-xl bg-surface border border-slate-200 text-ink outline-none">
+                <button onclick="alert('Yaradıldı')" class="w-full py-2.5 rounded-xl bg-brand text-white">Yarat</button>
+            </div>
+        </div>
+
+        <div id="panel-elanlar" class="admin-panel space-y-4 hidden">
+            <div class="p-5 rounded-[28px] bg-white border border-slate-200/90 shadow-2xs space-y-3 text-xs font-bold">
+                <h3 class="text-xs font-black text-ink">Elan Paylaş</h3>
+                <input type="text" placeholder="Başlıq"
+                    class="w-full p-2.5 rounded-xl bg-surface border border-slate-200 text-ink outline-none">
+                <button onclick="alert('Paylaşıldı')"
+                    class="w-full py-2.5 rounded-xl bg-brand text-white">Paylaş</button>
+            </div>
+        </div>
+
+        <div id="panel-cempionlarLiqasi" class="admin-panel space-y-4 hidden">
+            <div class="p-5 rounded-[28px] bg-white border border-slate-200/90 shadow-2xs space-y-3 text-xs font-bold">
+                <h3 class="text-xs font-black text-ink">Çempionlar Liqası Ayarları</h3>
+                <button onclick="alert('Yeniləndi')" class="w-full py-2.5 rounded-xl bg-brand text-white">Yadda
+                    saxla</button>
+            </div>
+        </div>
+
+        <div id="panel-kicikTurnir" class="admin-panel space-y-4 hidden">
+            <div class="p-5 rounded-[28px] bg-white border border-slate-200/90 shadow-2xs space-y-3 text-xs font-bold">
+                <h3 class="text-xs font-black text-ink">Kiçik Turnir</h3>
+                <input type="text" placeholder="Turnir adı"
+                    class="w-full p-2.5 rounded-xl bg-surface border border-slate-200 text-ink outline-none">
+                <button onclick="alert('Turnir yaradıldı')"
+                    class="w-full py-2.5 rounded-xl bg-brand text-white">Yarat</button>
+            </div>
+        </div>
+
+        <div id="panel-subheliFealiyyetler" class="admin-panel space-y-4 hidden">
+            <div class="p-5 rounded-[28px] bg-white border border-slate-200/90 shadow-2xs space-y-3 text-xs">
+                <h3 class="text-xs font-black text-ink">Şübhəli Fəaliyyətlər</h3>
+                <div class="p-3.5 rounded-2xl bg-rose-50">User_9921 · Blokla</div>
+            </div>
+        </div>
+
+        <div id="panel-loglar" class="admin-panel space-y-4 hidden">
+            <div class="p-5 rounded-[28px] bg-white border border-slate-200/90 shadow-2xs space-y-3 text-xs">
+                <h3 class="text-xs font-black text-ink">Audit Logları</h3>
+                <div class="p-2.5 rounded-xl bg-surface border border-slate-200">Əli İsmayıllı · Login</div>
+            </div>
+        </div>
+
+    </main>
+
+
+    <!-- ==================== ADMIN BÖLMƏLƏR MODALI ==================== -->
+    <div id="adminMenuModal" onclick="toggleAdminMenu()"
+        class="fixed inset-0 bg-slate-900/40 backdrop-blur-[2px] z-50 hidden flex items-end sm:items-center justify-center p-4">
+        <div onclick="event.stopPropagation()"
+            class="bg-white rounded-[32px] border border-slate-200 max-w-sm w-full p-5 space-y-3.5 shadow-2xl max-h-[85vh] overflow-y-auto no-scrollbar">
+
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                <h3 class="text-sm font-black text-ink flex items-center space-x-2">
+                    <span class="material-symbols-rounded text-amber-600 text-[20px]">admin_panel_settings</span>
+                    <span>Admin Bölmələri</span>
+                </h3>
+                <button onclick="toggleAdminMenu()"
+                    class="w-7 h-7 rounded-full bg-surface text-xs font-bold text-muted flex items-center justify-center">✕</button>
+            </div>
+
+            <!-- Adminə Xüsusi Yeni Bölmələr -->
+            <div class="space-y-1.5">
+                <span class="text-[10px] font-extrabold text-amber-700 uppercase tracking-wider">🌟 Admin Xüsusi</span>
+                <div class="grid grid-cols-2 gap-2 text-xs font-bold text-ink">
+                    <button onclick="selectSection('sekilTesiqi', 'Şəkil təsdiqi')"
+                        class="p-2.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 text-left transition flex items-center space-x-1.5"><span
+                            class="material-symbols-rounded text-[16px]">verified</span><span>Şəkil
+                            təsdiqi</span></button>
+                    <button onclick="selectSection('whatsappQruplari', 'WhatsApp qrupları')"
+                        class="p-2.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-900 text-left transition flex items-center space-x-1.5"><span
+                            class="material-symbols-rounded text-[16px]">groups</span><span>WhatsApp
+                            qrupları</span></button>
+                    <button onclick="selectSection('melumatSorgulari', 'Məlumat sorğuları')"
+                        class="p-2.5 rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-900 text-left transition flex items-center space-x-1.5"><span
+                            class="material-symbols-rounded text-[16px]">edit_note</span><span>Məlumat
+                            sorğusu</span></button>
+                    <button onclick="selectSection('xalBonusu', 'Xal bonusu & Stok')"
+                        class="p-2.5 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-900 text-left transition flex items-center space-x-1.5"><span
+                            class="material-symbols-rounded text-[16px]">bolt</span><span>Xal bonusu &
+                            Stok</span></button>
+                </div>
+            </div>
+
+            <!-- Standart İdarəetmə Bölmələri -->
+            <div class="space-y-1.5 pt-1">
+                <span class="text-[10px] font-extrabold text-muted uppercase tracking-wider">Ümumi İdarəetmə</span>
+                <div class="grid grid-cols-2 gap-2 text-xs font-bold text-ink">
+                    <button onclick="selectSection('icmal', 'İcmal')"
+                        class="p-2.5 rounded-xl bg-surface hover:bg-brandLight hover:text-brand text-left transition flex items-center space-x-1.5"><span
+                            class="material-symbols-rounded text-[16px]">analytics</span><span>İcmal</span></button>
+                    <button onclick="selectSection('sualBanki', 'Sual bankı')"
+                        class="p-2.5 rounded-xl bg-surface hover:bg-brandLight hover:text-brand text-left transition flex items-center space-x-1.5"><span
+                            class="material-symbols-rounded text-[16px]">quiz</span><span>Sual bankı</span></button>
+                    <button onclick="selectSection('sinaqlarim', 'Sınaqlarım')"
+                        class="p-2.5 rounded-xl bg-surface hover:bg-brandLight hover:text-brand text-left transition flex items-center space-x-1.5"><span
+                            class="material-symbols-rounded text-[16px]">assignment</span><span>Sınaqlarım</span></button>
+                    <button onclick="selectSection('sinaqNeticeleri', 'Nəticələr')"
+                        class="p-2.5 rounded-xl bg-surface hover:bg-brandLight hover:text-brand text-left transition flex items-center space-x-1.5"><span
+                            class="material-symbols-rounded text-[16px]">bar_chart</span><span>Nəticələr</span></button>
+                    <button onclick="selectSection('telebeler', 'Tələbələr')"
+                        class="p-2.5 rounded-xl bg-surface hover:bg-brandLight hover:text-brand text-left transition flex items-center space-x-1.5"><span
+                            class="material-symbols-rounded text-[16px]">groups</span><span>Tələbələr</span></button>
+                    <button onclick="selectSection('telebeMelumatlari', 'Məlumatlar')"
+                        class="p-2.5 rounded-xl bg-surface hover:bg-brandLight hover:text-brand text-left transition flex items-center space-x-1.5"><span
+                            class="material-symbols-rounded text-[16px]">badge</span><span>Məlumatlar</span></button>
+                    <button onclick="selectSection('onlineTelebeler', 'Onlayn')"
+                        class="p-2.5 rounded-xl bg-surface hover:bg-brandLight hover:text-brand text-left transition flex items-center space-x-1.5"><span
+                            class="material-symbols-rounded text-[16px]">sensors</span><span>Onlayn</span></button>
+                    <button onclick="selectSection('canliOyunlar', 'Canlı oyunlar')"
+                        class="p-2.5 rounded-xl bg-surface hover:bg-brandLight hover:text-brand text-left transition flex items-center space-x-1.5"><span
+                            class="material-symbols-rounded text-[16px]">sports_esports</span><span>Canlı
+                            oyunlar</span></button>
+                    <button onclick="selectSection('universitetler', 'Universitetlər')"
+                        class="p-2.5 rounded-xl bg-surface hover:bg-brandLight hover:text-brand text-left transition flex items-center space-x-1.5"><span
+                            class="material-symbols-rounded text-[16px]">school</span><span>Universitetlər</span></button>
+                    <button onclick="selectSection('sualXetalari', 'Sual xətaları')"
+                        class="p-2.5 rounded-xl bg-surface hover:bg-brandLight hover:text-brand text-left transition flex items-center space-x-1.5"><span
+                            class="material-symbols-rounded text-[16px]">report_problem</span><span>Sual
+                            xətaları</span></button>
+                    <button onclick="selectSection('tedbirler', 'Tədbirlər')"
+                        class="p-2.5 rounded-xl bg-surface hover:bg-brandLight hover:text-brand text-left transition flex items-center space-x-1.5"><span
+                            class="material-symbols-rounded text-[16px]">event</span><span>Tədbirlər</span></button>
+                    <button onclick="selectSection('elanlar', 'Elanlar')"
+                        class="p-2.5 rounded-xl bg-surface hover:bg-brandLight hover:text-brand text-left transition flex items-center space-x-1.5"><span
+                            class="material-symbols-rounded text-[16px]">campaign</span><span>Elanlar</span></button>
+                    <button onclick="selectSection('cempionlarLiqasi', 'Çempionlar liqası')"
+                        class="p-2.5 rounded-xl bg-surface hover:bg-brandLight hover:text-brand text-left transition flex items-center space-x-1.5"><span
+                            class="material-symbols-rounded text-[16px]">emoji_events</span><span>Çempionlar
+                            liqası</span></button>
+                    <button onclick="selectSection('kicikTurnir', 'Kiçik turnir')"
+                        class="p-2.5 rounded-xl bg-surface hover:bg-brandLight hover:text-brand text-left transition flex items-center space-x-1.5"><span
+                            class="material-symbols-rounded text-[16px]">military_tech</span><span>Kiçik
+                            turnir</span></button>
+                    <button onclick="selectSection('subheliFealiyyetler', 'Şübhəlilər')"
+                        class="p-2.5 rounded-xl bg-surface hover:bg-brandLight hover:text-brand text-left transition flex items-center space-x-1.5"><span
+                            class="material-symbols-rounded text-[16px]">gpp_bad</span><span>Şübhəlilər</span></button>
+                    <button onclick="selectSection('loglar', 'Loglar')"
+                        class="p-2.5 rounded-xl bg-surface hover:bg-brandLight hover:text-brand text-left transition flex items-center space-x-1.5 col-span-2"><span
+                            class="material-symbols-rounded text-[16px]">history</span><span>Audit
+                            Logları</span></button>
+                </div>
+            </div>
+
+        </div>
     </div>
 
-    <!-- Keçid Skripti -->
-    <script>
-        function switchAdminTab(tabId) {
-            const tabs = ['users', 'tests', 'avatars', 'tournaments', 'announcements'];
 
-            tabs.forEach(tab => {
-                const content = document.getElementById('tabContent-' + tab);
-                const btn = document.getElementById('tabBtn-' + tab);
-                if (tab === tabId) {
-                    content.classList.remove('hidden');
-                    btn.classList.add('active');
-                    btn.classList.remove('bg-slate-100', 'text-slate-600');
-                } else {
-                    content.classList.add('hidden');
-                    btn.classList.remove('active');
-                    btn.classList.add('bg-slate-100', 'text-slate-600');
-                }
+    <!-- ==================== JAVASCRIPT ==================== -->
+    <script>
+        function toggleAdminMenu() {
+            document.getElementById('adminMenuModal').classList.toggle('hidden');
+        }
+
+        function selectSection(panelId, title) {
+            document.querySelectorAll('.admin-panel').forEach(panel => {
+                panel.classList.add('hidden');
             });
+
+            const activePanel = document.getElementById('panel-' + panelId);
+            if (activePanel) {
+                activePanel.classList.remove('hidden');
+            }
+
+            document.getElementById('currentAdminTitle').innerText = title;
+            toggleAdminMenu();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     </script>
 

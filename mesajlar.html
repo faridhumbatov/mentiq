@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="az">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Məntiq.ON - Söhbətlər</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: '#6F61EF',
+                        brandDark: '#5849E0',
+                        brandLight: '#EEECFC',
+                        accentYellow: '#FCD53F',
+                        ink: '#1E2235',
+                        muted: '#7E849B',
+                        surface: '#F8F9FC'
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #FFFFFF;
+            color: #1E2235;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .material-symbols-rounded {
+            font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+            user-select: none;
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        #drawerBackdrop {
+            transition: opacity 0.28s ease, visibility 0.28s ease;
+        }
+
+        #sideDrawer {
+            transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex flex-col pb-24 max-w-md mx-auto relative bg-surface border-x border-slate-100">
+
+    <!-- ==================== 1. STABİL HEADER ==================== -->
+    <header class="px-5 pt-4 pb-2 flex items-center justify-between bg-white border-b border-slate-100">
+        <div class="flex items-center space-x-3">
+            <button onclick="toggleDrawer(true)"
+                class="w-10 h-10 rounded-2xl bg-surface border border-slate-200/80 hover:bg-slate-100 flex items-center justify-center text-ink active:scale-95 transition focus:outline-none">
+                <span class="material-symbols-rounded text-[22px]">menu</span>
+            </button>
+
+            <div>
+                <div class="flex items-center space-x-1.5">
+                    <span class="text-[11px] font-bold text-ink">Bürünc 1</span>
+                    <span class="text-[10px] font-semibold text-muted">· 62%</span>
+                </div>
+                <div class="w-24 h-2 bg-slate-100 rounded-full overflow-hidden mt-1 border border-slate-200/60">
+                    <div class="bg-brand h-full rounded-full" style="width: 62%"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex items-center space-x-2">
+            <a href="market.html"
+                class="flex items-center space-x-1 bg-amber-50/90 border border-amber-200/80 px-3 py-1.5 rounded-full active:scale-95 transition">
+                <span class="material-symbols-rounded text-amber-500 text-[16px]">bolt</span>
+                <span class="text-xs font-extrabold text-amber-900">323 XP</span>
+            </a>
+
+            <button onclick="openInboxModal()"
+                class="w-10 h-10 rounded-2xl bg-surface border border-slate-200/80 hover:bg-slate-100 flex items-center justify-center text-ink relative active:scale-95 transition">
+                <span class="material-symbols-rounded text-[20px]">notifications</span>
+                <span class="absolute top-2.5 right-2.5 w-2 h-2 bg-rose-500 rounded-full ring-2 ring-white"></span>
+            </button>
+        </div>
+    </header>
+
+
+    <!-- ==================== 2. ƏSAS KONTENT (SİYAHI VƏ YA ÇAT) ==================== -->
+    <main class="flex-1 flex flex-col px-5 pt-4">
+
+        <!-- Söhbətlər Siyahısı (1 Admin + 3 Müəllim) -->
+        <div id="chatsListSection" class="space-y-4">
+            <div class="flex items-center justify-between">
+                <h2 class="text-base font-black text-ink flex items-center space-x-2">
+                    <span class="material-symbols-rounded text-brand text-[22px]">chat</span>
+                    <span>Müəllim və Admin Dəstəyi</span>
+                </h2>
+                <span class="text-[11px] font-bold text-muted">4 aktiv söhbət</span>
+            </div>
+
+            <div class="space-y-2.5">
+
+                <!-- 1. Admin -->
+                <div onclick="openChat('Platforma Admini', 'AD', 'Admin', 'Fərid, sualınızla bağlı 13-cü dərs sistemə əlavə olundu.')"
+                    class="cursor-pointer p-4 rounded-[26px] bg-white border border-slate-200/90 shadow-sm hover:border-brand/50 transition flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="relative">
+                            <div
+                                class="w-12 h-12 rounded-2xl bg-amber-50 border border-amber-200 text-amber-600 flex items-center justify-center font-black text-sm">
+                                AD</div>
+                            <span
+                                class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-emerald-500 border-2 border-white rounded-full"></span>
+                        </div>
+                        <div>
+                            <div class="flex items-center space-x-1.5">
+                                <h4 class="text-xs font-extrabold text-ink">Platforma Admini</h4>
+                                <span
+                                    class="text-[9px] font-extrabold bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full">Admin</span>
+                            </div>
+                            <p class="text-[11px] text-muted truncate mt-0.5 max-w-[180px]">Fərid, sualınızla
+                                bağlı...</p>
+                        </div>
+                    </div>
+                    <span
+                        class="w-5 h-5 rounded-full bg-brand text-white font-extrabold text-[10px] inline-flex items-center justify-center">1</span>
+                </div>
+
+                <!-- 2. Müəllim 1 -->
+                <div onclick="openChat('Fərid Müəllim', 'OM', 'Müəllim (Baş Məntiqçi)', 'Operatorlar dərsinin testlərini işləməyi unutma.')"
+                    class="cursor-pointer p-4 rounded-[26px] bg-white border border-slate-200/90 shadow-sm hover:border-brand/50 transition flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="relative">
+                            <div
+                                class="w-12 h-12 rounded-2xl bg-brandLight border border-indigo-200 text-brand flex items-center justify-center font-black text-sm">
+                                FM</div>
+                            <span
+                                class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-emerald-500 border-2 border-white rounded-full"></span>
+                        </div>
+                        <div>
+                            <div class="flex items-center space-x-1.5">
+                                <h4 class="text-xs font-extrabold text-ink">Fərid Müəllim</h4>
+                                <span
+                                    class="text-[9px] font-extrabold bg-brandLight text-brand px-2 py-0.5 rounded-full">Müəllim</span>
+                            </div>
+                            <p class="text-[11px] text-muted truncate mt-0.5 max-w-[180px]">Operatorlar dərsinin
+                                testlərini...</p>
+                        </div>
+                    </div>
+                    <span class="text-[10px] font-bold text-muted">İndi</span>
+                </div>
+
+                <!-- 3. Müəllim 2 -->
+                <div onclick="openChat('Leyla Müəllimə', 'LM', 'Müəllim (Şifrələr üzrə)', 'Şifrələr mövzusunda çətinlik çəkdiyin sualları mənə göndər.')"
+                    class="cursor-pointer p-4 rounded-[26px] bg-white border border-slate-200/90 shadow-sm hover:border-brand/50 transition flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="relative">
+                            <div
+                                class="w-12 h-12 rounded-2xl bg-rose-50 border border-rose-200 text-rose-600 flex items-center justify-center font-black text-sm">
+                                LM</div>
+                            <span
+                                class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-slate-300 border-2 border-white rounded-full"></span>
+                        </div>
+                        <div>
+                            <div class="flex items-center space-x-1.5">
+                                <h4 class="text-xs font-extrabold text-ink">Leyla Müəllimə</h4>
+                                <span
+                                    class="text-[9px] font-extrabold bg-brandLight text-brand px-2 py-0.5 rounded-full">Müəllim</span>
+                            </div>
+                            <p class="text-[11px] text-muted truncate mt-0.5 max-w-[180px]">Şifrələr mövzusunda
+                                çətinlik...</p>
+                        </div>
+                    </div>
+                    <span class="text-[10px] font-bold text-muted">Dünən</span>
+                </div>
+
+                <!-- 4. Müəllim 3 -->
+                <div onclick="openChat('Anar Müəllim', 'AM', 'Müəllim (Riyazi Məntiq)', 'Salam Fərid, sınaq nəticələrin xeyli yaxşılaşıb, davam et!')"
+                    class="cursor-pointer p-4 rounded-[26px] bg-white border border-slate-200/90 shadow-sm hover:border-brand/50 transition flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="relative">
+                            <div
+                                class="w-12 h-12 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-600 flex items-center justify-center font-black text-sm">
+                                AM</div>
+                            <span
+                                class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-slate-300 border-2 border-white rounded-full"></span>
+                        </div>
+                        <div>
+                            <div class="flex items-center space-x-1.5">
+                                <h4 class="text-xs font-extrabold text-ink">Anar Müəllim</h4>
+                                <span
+                                    class="text-[9px] font-extrabold bg-brandLight text-brand px-2 py-0.5 rounded-full">Müəllim</span>
+                            </div>
+                            <p class="text-[11px] text-muted truncate mt-0.5 max-w-[180px]">Salam Fərid, sınaq
+                                nəticələrin...</p>
+                        </div>
+                    </div>
+                    <span class="text-[10px] font-bold text-muted">2 gün əvvəl</span>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Söhbət Pəncərəsi (Əvvəlcə gizlidir) -->
+        <div id="chatRoomSection" class="hidden flex-col space-y-3 flex-1">
+            <!-- Çat Header -->
+            <div
+                class="p-3.5 rounded-2xl bg-white border border-slate-200/90 shadow-2xs flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <button onclick="closeChat()"
+                        class="w-8 h-8 rounded-xl bg-surface border border-slate-200 flex items-center justify-center text-ink active:scale-95 transition">
+                        <span class="material-symbols-rounded text-[18px]">arrow_back</span>
+                    </button>
+                    <div class="flex items-center space-x-2.5">
+                        <div id="chatBadge"
+                            class="w-9 h-9 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-black text-xs">
+                            AD</div>
+                        <div>
+                            <h4 id="chatName" class="text-xs font-extrabold text-ink leading-tight">Admin</h4>
+                            <span id="chatRole" class="text-[10px] font-semibold text-emerald-500">Aktivdir</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mesajlar Qutusu -->
+            <div id="messagesContainer"
+                class="bg-white rounded-[28px] border border-slate-200/90 p-4 space-y-3 h-80 overflow-y-auto no-scrollbar shadow-sm text-xs">
+                <!-- Dinamik dolur -->
+            </div>
+
+            <!-- Mesaj Yazma Paneli -->
+            <div class="p-2 bg-white rounded-2xl border border-slate-200/90 shadow-sm flex items-center space-x-2">
+                <input type="text" id="messageInput" placeholder="Mesajınızı yazın..."
+                    class="flex-1 px-3 py-2 text-xs font-bold text-ink bg-transparent outline-none">
+                <button onclick="sendMessage()"
+                    class="w-10 h-10 rounded-xl bg-brand text-white flex items-center justify-center active:scale-95 transition shadow-sm">
+                    <span class="material-symbols-rounded text-[18px]">send</span>
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+
+    <!-- ==================== YAN MENYU (DRAWER) ==================== -->
+    <div id="drawerBackdrop" onclick="toggleDrawer(false)"
+        class="fixed inset-0 bg-slate-900/35 backdrop-blur-[2px] z-40 opacity-0 invisible">
+    </div>
+
+    <aside id="sideDrawer"
+        class="fixed top-0 bottom-0 left-0 w-72 bg-white z-50 border-r border-slate-200 shadow-2xl p-5 flex flex-col justify-between -translate-x-full rounded-r-3xl">
+
+        <div class="space-y-3">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                <a href="profil.html" class="flex items-center space-x-2.5">
+                    <div
+                        class="w-9 h-9 rounded-full bg-brandLight border border-indigo-200 text-brand flex items-center justify-center font-extrabold text-xs">
+                        FH</div>
+                    <div>
+                        <span class="text-sm font-extrabold text-ink block leading-none">Fərid Hümbətov</span>
+                        <span class="text-[11px] font-medium text-muted">Profilə keç →</span>
+                    </div>
+                </a>
+                <button onclick="toggleDrawer(false)"
+                    class="w-7 h-7 rounded-full bg-surface border border-slate-200/80 flex items-center justify-center text-muted hover:text-ink transition">✕</button>
+            </div>
+
+            <nav class="space-y-0.5 text-xs font-bold text-ink">
+                <a href="panel.html"
+                    class="flex items-center space-x-2.5 px-3 py-2 rounded-xl hover:bg-surface transition"><span
+                        class="material-symbols-rounded text-[18px] text-muted">dashboard</span><span>Əsas
+                        Panel</span></a>
+                <a href="sinaqlar.html"
+                    class="flex items-center space-x-2.5 px-3 py-2 rounded-xl hover:bg-surface transition"><span
+                        class="material-symbols-rounded text-[18px] text-muted">quiz</span><span>Sınaqlar
+                        Siyahısı</span></a>
+                <a href="cempionlar.html"
+                    class="flex items-center space-x-2.5 px-3 py-2 rounded-xl hover:bg-surface transition"><span
+                        class="material-symbols-rounded text-[18px] text-muted">swords</span><span>Çempionlar
+                        Liqası</span></a>
+                <a href="tedbirler.html"
+                    class="flex items-center space-x-2.5 px-3 py-2 rounded-xl hover:bg-surface transition"><span
+                        class="material-symbols-rounded text-[18px] text-muted">event</span><span>Tədbirlər</span></a>
+                <a href="reytinq.html"
+                    class="flex items-center space-x-2.5 px-3 py-2 rounded-xl hover:bg-surface transition"><span
+                        class="material-symbols-rounded text-[18px] text-muted">leaderboard</span><span>Reytinq və
+                        Liqalar</span></a>
+                <a href="qruplar.html"
+                    class="flex items-center space-x-2.5 px-3 py-2 rounded-xl hover:bg-surface transition"><span
+                        class="material-symbols-rounded text-[18px] text-muted">groups</span><span>Qruplar</span></a>
+                <a href="statistika.html"
+                    class="flex items-center space-x-2.5 px-3 py-2 rounded-xl hover:bg-surface transition"><span
+                        class="material-symbols-rounded text-[18px] text-muted">query_stats</span><span>Statistikam</span></a>
+                <a href="market.html"
+                    class="flex items-center space-x-2.5 px-3 py-2 rounded-xl hover:bg-surface transition"><span
+                        class="material-symbols-rounded text-[18px] text-muted">storefront</span><span>IQ
+                        Market</span></a>
+                <a href="movzu.html"
+                    class="flex items-center space-x-2.5 px-3 py-2 rounded-xl hover:bg-surface transition"><span
+                        class="material-symbols-rounded text-[18px] text-muted">menu_book</span><span>Mövzu
+                        İzahı</span></a>
+                <a href="mesajlar.html"
+                    class="flex items-center space-x-2.5 px-3 py-2 rounded-xl bg-brandLight text-brand"><span
+                        class="material-symbols-rounded text-[18px]">chat</span><span>Mesajlar</span></a>
+                <a href="elanlar.html"
+                    class="flex items-center space-x-2.5 px-3 py-2 rounded-xl hover:bg-surface transition"><span
+                        class="material-symbols-rounded text-[18px] text-muted">campaign</span><span>Elanlar</span></a>
+                <a href="ideyalar.html"
+                    class="flex items-center space-x-2.5 px-3 py-2 rounded-xl hover:bg-surface transition"><span
+                        class="material-symbols-rounded text-[18px] text-muted">tips_and_updates</span><span>İdeyalar</span></a>
+                <!-- Admin və Müəllim Paneli Keçidləri -->
+                <div class="pt-2 mt-2 border-t border-slate-100 space-y-0.5 text-xs font-bold text-ink">
+                    <a href="muellim.html"
+                        class="flex items-center space-x-2.5 px-3 py-2 rounded-xl hover:bg-surface transition">
+                        <span class="material-symbols-rounded text-[18px] text-brand">school</span>
+                        <span>Müəllim Paneli</span>
+                    </a>
+                    <a href="admin.html"
+                        class="flex items-center space-x-2.5 px-3 py-2 rounded-xl hover:bg-surface transition">
+                        <span class="material-symbols-rounded text-[18px] text-amber-600">admin_panel_settings</span>
+                        <span>Admin Paneli</span>
+                    </a>
+                </div>
+            </nav>
+        </div>
+
+        <div class="pt-2 border-t border-slate-100 text-xs font-bold">
+            <a href="auth.html"
+                class="flex items-center justify-center space-x-1 w-full py-2 rounded-xl text-rose-500 hover:bg-rose-50 transition"><span>Hesabdan
+                    Çıxış</span></a>
+        </div>
+    </aside>
+
+
+    <!-- ==================== MODAL (BİLDİRİŞLƏR) ==================== -->
+    <div id="inboxModal" onclick="closeInboxModal()"
+        class="fixed inset-0 bg-slate-900/35 backdrop-blur-[2px] z-50 hidden flex items-center justify-center p-5">
+        <div onclick="event.stopPropagation()"
+            class="bg-white rounded-3xl border border-slate-200 max-w-xs w-full p-5 space-y-3 shadow-xl">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-2.5">
+                <h3 class="text-sm font-extrabold text-ink">Bildirişlər</h3>
+                <button onclick="closeInboxModal()"
+                    class="w-7 h-7 rounded-full bg-surface text-xs font-bold text-muted">✕</button>
+            </div>
+            <p class="text-xs text-muted">Yeni mesajınız var.</p>
+        </div>
+    </div>
+
+
+    <!-- ==================== JAVASCRIPT ==================== -->
+    <script>
+        function toggleDrawer(open) {
+            const drawer = document.getElementById('sideDrawer');
+            const backdrop = document.getElementById('drawerBackdrop');
+            if (open) {
+                drawer.classList.remove('-translate-x-full');
+                backdrop.classList.remove('opacity-0', 'invisible');
+                backdrop.classList.add('opacity-100', 'visible');
+            } else {
+                drawer.classList.add('-translate-x-full');
+                backdrop.classList.remove('opacity-100', 'visible');
+                backdrop.classList.add('opacity-0', 'invisible');
+            }
+        }
+
+        function openInboxModal() { document.getElementById('inboxModal').classList.remove('hidden'); }
+        function closeInboxModal() { document.getElementById('inboxModal').classList.add('hidden'); }
+
+        function openChat(name, initials, role, initialText) {
+            history.pushState({ chatOpen: true }, '', '#chat');
+
+            document.getElementById('chatsListSection').classList.add('hidden');
+            const room = document.getElementById('chatRoomSection');
+            room.classList.remove('hidden');
+            room.classList.add('flex');
+
+            document.getElementById('chatName').innerText = name;
+            document.getElementById('chatRole').innerText = role;
+            document.getElementById('chatBadge').innerText = initials;
+
+            const container = document.getElementById('messagesContainer');
+            container.innerHTML = `
+        <div class="flex justify-start">
+          <div class="p-3 rounded-2xl bg-surface border border-slate-200 text-ink max-w-[80%]">${initialText}</div>
+        </div>
+        <div class="flex justify-end">
+          <div class="p-3 rounded-2xl bg-brand text-white max-w-[80%]">Salam, təşəkkür edirəm!</div>
+        </div>
+      `;
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function closeChat() {
+            if (location.hash === '#chat') {
+                history.back();
+            } else {
+                hideChatRoom();
+            }
+        }
+
+        function hideChatRoom() {
+            const room = document.getElementById('chatRoomSection');
+            room.classList.add('hidden');
+            room.classList.remove('flex');
+            document.getElementById('chatsListSection').classList.remove('hidden');
+        }
+
+        window.addEventListener('popstate', function (event) {
+            if (location.hash !== '#chat') {
+                hideChatRoom();
+            }
+        });
+
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const val = input.value.trim();
+            if (!val) return;
+
+            const container = document.getElementById('messagesContainer');
+            const msg = document.createElement('div');
+            msg.className = "flex justify-end";
+            msg.innerHTML = `<div class="p-3 rounded-2xl bg-brand text-white max-w-[80%]">${val}</div>`;
+            container.appendChild(msg);
+            input.value = '';
+            container.scrollTop = container.scrollHeight;
+        }
+    </script>
+
+</body>
+
+</html>
